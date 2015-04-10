@@ -8,6 +8,7 @@
 #include<algorithm>
 #include<tuple>
 #include<cmath>
+#include<sstream>
 using namespace std;
 
 typedef long long ll;
