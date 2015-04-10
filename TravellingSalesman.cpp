@@ -1,6 +1,8 @@
 #include "Defines.h"
 
-// executes is O(n^2 2^n) TSP DP
+/* START SOLUTION */
+
+// executes the O(n^2 2^n) TSP DP
 // the subproblem is: "what is the minimum cost
 // of starting at node 0, ending at node t and
 // visiting all nodes in vis?"
@@ -52,6 +54,8 @@ ll tsp(const vvll& g) {
     vvll dp(1<<g.size(), vll(g.size(), -1));
     return tsp(g, dp, (1<<g.size())-1, 0, g.size());
 }
+
+/* END SOLUTION */
 
 // solves http://uva.onlinejudge.org/index.php?option=onlinejudge&Itemid=99999999&page=submit_problem&problemid=1437&category=
 int solve_beepers() {
