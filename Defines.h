@@ -4,6 +4,8 @@
 #include<iostream>
 #include<vector>
 #include<queue>
+#include<map>
+#include<set>
 #include<climits>
 #include<algorithm>
 #include<tuple>
@@ -24,6 +26,9 @@ typedef vector<vb> vvb;
 typedef vector<vi> vvi;
 typedef vector<vll> vvll;
 typedef vector<vs> vvs;
+
+typedef ostringstream oss;
+typedef istringstream iss;
 
 #define _ ignore
 

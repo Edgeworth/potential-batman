@@ -11,8 +11,8 @@ void top_sort(const vvi& g, vi& ordered) {
     ordered.resize(0);
     vi indegs(g.size());
 
-    for(int c = 0; c < g.size(); ++c)
-        for(int n : g[c])
+    for(const vi& ns : g)
+        for(int n : ns)
             ++indegs[n];
 
     queue<int> q;

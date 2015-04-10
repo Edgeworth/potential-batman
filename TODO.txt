@@ -10,7 +10,6 @@ Graph:
     - Blossom algorithm
     - K shortest paths / loops
     - Knights tour divide and conquer
-    - Counting top sorts
 
 DP
     - Travelling salesman
