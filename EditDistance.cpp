@@ -7,7 +7,13 @@
 
 enum { REP = 0, ADD, REM };
 
-ll edit_distance(const string u, const string v, vvi& ts) {
+// ts: a 2d vector of size u.size() + 1 by v.size() + 1
+//     during execution of this function, the (i,j)th
+//     entry of ts is set to the optimum operation used to
+//     transform the length i prefix of u into the length j
+//     prefix of v
+// returns: the edit distance between u and v
+int edit_distance(const string u, const string v, vvi& ts) {
     vvll dp(u.size() + 1, vll(v.size() + 1, LLONG_MAX)); 
     for(int j = 0; j <= v.size(); ++j) {
         dp[0][j] = j;
