@@ -1,7 +1,6 @@
 Graph:
     - Prims / Kruskal's
     - Strongly connected components
-    - Topological sort
     - Min cost perfect matching (Hungarian algorithm?)
     - Min cost max flow
     - Articulation points
@@ -11,6 +10,7 @@ Graph:
     - Blossom algorithm
     - K shortest paths / loops
     - Knights tour divide and conquer
+    - Counting top sorts
 
 DP
     - Travelling salesman

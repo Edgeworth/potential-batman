@@ -10,10 +10,10 @@
 //          set to contain the index of the penultumate element in the
 //          lis ending at each index
 // returns: the length of the lis in in
-int lis(const vector<ll>& in, vector<int>& liss, vector<int>& parents) {
+int lis(const vll& in, vi& liss, vi& parents) {
     // position j gives index of the last element in "best" known lis
     // of length j (where best means ends in smallest element)
-    vector<int> length_idx(in.size() + 1, -1);
+    vi length_idx(in.size() + 1, -1);
     // position i gives the immediate predecessor of element i in best
     // known lis
     parents.resize(in.size(), -1);
@@ -50,9 +50,8 @@ int lis(const vector<ll>& in, vector<int>& liss, vector<int>& parents) {
 }
 
 // print lis ending at position index
-void print_lis(const vector<ll>& in, const vector<int>& parents,
-               int index) {
-    vector<int> idx_seq;
+void print_lis(const vll& in, const vi& parents, int index) {
+    vi idx_seq;
     for(int i = index; i >= 0; i = parents[i])
         idx_seq.push_back(i);
     reverse(idx_seq.begin(), idx_seq.end());
@@ -69,13 +68,13 @@ int solve_wavio() {
         int N;
         cin >> N;
 
-        vector<ll> in(N), rin(N);
+        vll in(N), rin(N);
         for(int n = 0; n < N; ++n) {
             cin >> in[n];
             rin[N-1-n] = in[n];
         }
 
-        vector<int> liss, rliss, p, rp;
+        vi liss, rliss, p, rp;
         lis(in, liss, p);
         lis(rin, rliss, rp);
 
