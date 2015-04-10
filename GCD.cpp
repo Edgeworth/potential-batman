@@ -1,6 +1,5 @@
 #include "Defines.h"
 
-// verified on UVA 10090 - Marbles
 
 /* START SOLUTION */
 
@@ -33,7 +32,7 @@ pair<ll, ll> xgcd(ll a, ll b) {
     return res;
 }
 
-//-RECIPE-END-//
+/* END SOLUTION */
 
 int test() {
     ll ps[4][2] = {{13, 7}, {-13, 7}, {-13, -7}, {13, -7}};
