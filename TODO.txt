@@ -12,7 +12,6 @@ Graph:
     - Knights tour divide and conquer
 
 DP
-    - Travelling salesman
     - Unbound and 0/1 knapsack
     - Largest sum sub-matrix
     - Balanced partition
