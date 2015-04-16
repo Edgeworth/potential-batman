@@ -2,8 +2,11 @@
 #define DEFINES_INCLUDED
 
 #include<iostream>
+#include<sstream>
 #include<vector>
 #include<queue>
+#include<map>
+#include<stack>
 #include<climits>
 #include<algorithm>
 #include<tuple>
