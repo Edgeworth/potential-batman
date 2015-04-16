@@ -99,7 +99,7 @@ int solve_equation() {
 
       q.push_back(l);
     }
-    for (auto s : infix_to_postfix(q, ops)) cout << s;
+    for (string s : infix_to_postfix(q, ops)) cout << s;
     cout << endl;
   }
 
