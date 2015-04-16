@@ -4,10 +4,11 @@
 
 // coins: a list of the values of allowed coins
 // val: the target value to be constructed
-// returns: the number of ways of making val cents from the given coins
-
-// runs in O(nV) time, where n is the number of coins, and V is the target value
-// subproblem: how many ways of making v using coins of value c or less?
+// returns: the number of ways of making val cents from the
+// given coins runs in O(nV) time, where n is the number of
+// coins, and V is the target value
+// subproblem: how many ways of making v using coins of
+// value c or less?
 // recurrence: every way either uses coin c or does not
 ll coin_change(const vll& coins, ll val) {
     vvll dp(val + 1, vll(coins.size(), 0));

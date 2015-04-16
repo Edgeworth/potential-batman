@@ -1,4 +1,6 @@
+- Get more than one person to read each problem.
 - When input strings could be blank, make sure you use
   getline rather than stream extraction.
 - When using getline, call cin.peek() to force-update
   the eof bit before checking for the end of file.
+
