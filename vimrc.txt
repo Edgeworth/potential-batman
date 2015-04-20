@@ -1,6 +1,0 @@
-Vimrc
-
-
-    set sw=4 ts=4 nu mouse=a
-	filetype plugin indent on
-

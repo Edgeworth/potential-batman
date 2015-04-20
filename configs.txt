@@ -1,0 +1,10 @@
+Configs
+
+## .vimrc
+
+    set sw=4 ts=4 nu mouse=a
+    filetype plugin indent on
+
+## .bashrc
+
+    function c { g++ -g -Wall -std=gnu++11 -o $1 $1.cpp  &&  ./$1 < $1.in ; }
