@@ -2,7 +2,7 @@ Configs
 
 ## .vimrc
 
-    set sw=4 ts=4 nu mouse=a hlsearch
+    set sw=4 ts=4 nu mouse=a hlsearch ignorecase scs
     filetype plugin indent on 
     inoremap jj <Esc>
     nnoremap j gj
