@@ -1,3 +1,13 @@
+Protips
+
+- Write test cases for all cases you can think of.
+- Clear all global state.
+- Autoindent your code to look for misplaced braces / scope.
+- Always do the diff.
+
+- Don't dismiss a solution without proof.
+
+- Run your algorithm by hand on sample input.
 - Get more than one person to read each problem.
 - When input strings could be blank, make sure you use
   getline rather than stream extraction.

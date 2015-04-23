@@ -10,19 +10,25 @@ Graph:
     - Blossom algorithm
     - K shortest paths / loops
     - Knights tour divide and conquer
+    - Bi-Colouring
+    - Chromatic Number
 
 DP
     - Unbound and 0/1 knapsack
     - Largest sum sub-matrix
     - Balanced partition
 
+Data Structures
+    - Fenwick Tree
+
 Maths
     - Prime generating/checking
         - Rho algorithm?
+        - 
     - Kirchhoff's theorem
     - Number lists/formulas
         - Carmichael numbers (43 numbers <= 10^6)
-        - Catlan numbers
+        - Catalan numbers
         - TODO: add more
     - Fibonnaci with matrices
     - Binomial coefficients (esp. properties mod prime)
@@ -33,6 +39,7 @@ Maths
     - Brent's cycle detection algorithm
     - Systems of inequalities with Bellman-Ford
     - Euler's totient function
+    - Chinese remainder theorem
 
 Comp geom
     - Library
@@ -46,7 +53,7 @@ Comp geom
     - Line segment intersections
     - Convex hull
     - Closest pair of points
-    - Voronoi's algorithm
+    - --Voronoi's algorithm lol--
     - Boolean ops on polygons
     - Geom data structures
         - Range/cell querying
