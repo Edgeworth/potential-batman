@@ -22,9 +22,9 @@ Data Structures
     - Fenwick Tree
 
 Maths
+    - 2SAT
     - Prime generating/checking
         - Rho algorithm?
-        - 
     - Kirchhoff's theorem
     - Number lists/formulas
         - Carmichael numbers (43 numbers <= 10^6)
