@@ -7,7 +7,7 @@ Graph:
     - Dijkstra
     - Floyd-Warshall (+ cycle detection)
     - Bellman-Ford (+ cycle detection)
-    - Blossom algorithm
+    - Blossom algorithm :(
     - K shortest paths / loops
     - Knights tour divide and conquer
     - Bi-Colouring
@@ -17,6 +17,9 @@ DP
     - Unbound and 0/1 knapsack
     - Largest sum sub-matrix
     - Balanced partition
+
+Misc
+    - KMP string matching
 
 Data Structures
     - Fenwick Tree
