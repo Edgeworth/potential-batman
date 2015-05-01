@@ -1,10 +1,8 @@
 Graph:
-    - Prims / Kruskal's
     - Strongly connected components
     - Min cost perfect matching (Hungarian algorithm?)
     - Min cost max flow
     - Articulation points
-    - Dijkstra
     - Floyd-Warshall (+ cycle detection)
     - Bellman-Ford (+ cycle detection)
     - Blossom algorithm :(
