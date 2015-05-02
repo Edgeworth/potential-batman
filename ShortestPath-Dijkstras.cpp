@@ -10,12 +10,12 @@ typedef vector<vpli> vvpli;
 // el    : an edge list of the form {weight, to}
 // dads  : init with (|V|, -1), to be filled
 // dists : init with (|V|, LLONG_MAX), to be filled
+//         can use a vis array instead if dists arent needed
 // start : starting node
 // returns the weight of the minimum spanning tree or -1 if 
 //         not connected
 void dijkstras(vvpli& el, vi& dads, vll& dists, int start) {
   int N = el.size();
-  vb vis(N, false);
   set<pli> pq; // weight, node
 
   dists[start] = 0;
