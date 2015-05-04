@@ -2,6 +2,7 @@
 #define DEFINES_INCLUDED
 
 #include<iostream>
+#include<iomanip>
 #include<sstream>
 #include<vector>
 #include<queue>
