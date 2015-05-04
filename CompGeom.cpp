@@ -1,26 +1,3 @@
-
-const double EP = 1e-7;
-
-bool equ(double a, double b) {
-  return abs(a - b) < EP;
-}
-
-bool lteq(double a, double b) {
-  return a < b + EP;
-}
-
-bool lt(double a, double b) {
-  return a < b - EP;
-}
-
-bool gteq(double a, double b) {
-  return a > b - EP;
-}
-
-bool gt(double a, double b) {
-  return a > b + EP;
-}
-
 struct v2d {
   double x, y;
 
