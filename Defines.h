@@ -17,27 +17,60 @@
 using namespace std;
 
 typedef long long ll;
+typedef long double ld;
+// change to double if less accuracy needed 
+typedef ld dbl; 
 
-typedef tuple<double, double> vec2;
+typedef tuple<dbl, dbl> vec2;
 typedef tuple<int, int, int> tiii;
 typedef pair<int, int> pii;
 
-typedef vector<bool> vb;
-typedef vector<int> vi;
 typedef vector<ll> vll;
-typedef vector<string> vs;
-typedef vector<pii> vpii;
-typedef vector<tiii> vtiii;
-
-typedef vector<vb> vvb;
-typedef vector<vi> vvi;
 typedef vector<vll> vvll;
+
+typedef vector<dbl> vd;
+typedef vector<vd> vvd;
+
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+
+typedef vector<string> vs;
 typedef vector<vs> vvs;
+
+typedef vector<pii> vpii;
 typedef vector<vpii> vvpii;
+typedef vector<tiii> vtiii;
 
 typedef ostringstream oss;
 typedef istringstream iss;
 
 #define _ ignore
+
+// used for comp geom and some maths
+
+const dbl EP = 1e-7;
+
+bool equ(dbl a, dbl b) {
+  return abs(a - b) < EP;
+}
+
+bool lteq(dbl a, dbl b) {
+  return a < b + EP;
+}
+
+bool lt(dbl a, dbl b) {
+  return a < b - EP;
+}
+
+bool gteq(dbl a, dbl b) {
+  return a > b - EP;
+}
+
+bool gt(dbl a, dbl b) {
+  return a > b + EP;
+}
 
 #endif
