@@ -1,5 +1,5 @@
 struct v2d {
-  double x, y;
+  dbl x, y;
 
   v2d operator+(const v2d& o) const {
     return {x + o.x, y + o.y};
@@ -7,10 +7,10 @@ struct v2d {
   v2d operator-(const v2d& o) const {
     return {x - o.x, y - o.y};
   }
-  v2d operator*(const double mul) const {
+  v2d operator*(const dbl mul) const {
     return {mul * x, mul * y};
   }
-  v2d operator/(const double div) const {
+  v2d operator/(const dbl div) const {
     return {x / div, y / div};
   }
   bool operator==(const v2d& o) const {
@@ -24,11 +24,11 @@ struct line2d {
 
 typedef vector<v2d> poly2d;
 
-double mag2d(const v2d& v) {
+dbl mag2d(const v2d& v) {
   return sqrt(v.x * v.x + v.y * v.y);
 } 
 
-double dist2d(const v2d& a, const v2d& b) {
+dbl dist2d(const v2d& a, const v2d& b) {
   return mag2d(a - b);
 }
 
@@ -71,8 +71,8 @@ bool point_on_line_inf2d(const v2d& p, const line2d& l) {
 }
 
 bool point_on_line_segment2d(const v2d& p, const line2d& l, bool include) {
-  double l_minx = min(l.a.x, l.b.x);
-  double l_maxx = max(l.a.x, l.b.x);
+  dbl l_minx = min(l.a.x, l.b.x);
+  dbl l_maxx = max(l.a.x, l.b.x);
   // To not include endpoints, remove eq's.
   if (!point_on_line_inf2d(p, l)) return false;
   if (include) return gteq(p.x, l_minx) && lteq(p.x, l_maxx);
@@ -81,11 +81,11 @@ bool point_on_line_segment2d(const v2d& p, const line2d& l, bool include) {
 
 // Extend to include finding the line segment for infinite
 // intersection
-bool inter2d(const line2d& a, const line2d& b, double& aprop, double& bprop, v2d& point, bool include) {
+bool inter2d(const line2d& a, const line2d& b, dbl& aprop, dbl& bprop, v2d& point, bool include) {
   if ((a.a == b.a && a.b == b.b)  || (a.a == b.b && a.b == b.a)) return true;
-  double a = b.a.x - a.a.x, b = b.b.x - b.a.x, c = a.b.x - a.a.x;
-  double c = b.a.y - a.a.y, e = b.b.y - b.a.y, f = a.b.y - a.a.y;
-  double bfce = b * f - c * e;
+  dbl a = b.a.x - a.a.x, b = b.b.x - b.a.x, c = a.b.x - a.a.x;
+  dbl c = b.a.y - a.a.y, e = b.b.y - b.a.y, f = a.b.y - a.a.y;
+  dbl bfce = b * f - c * e;
   
   if (equ(bfce, 0.0)) {
     // For no endpoints, change this FN to not include
@@ -110,7 +110,7 @@ bool colinear2d(const v2d& a, const v2d& b, const v2d& c) {
 
 v2d convex2dref;
 bool convex2dcomp(const v2d& a, const v2d& b) {
-  double det = cross_at2d(convex2dref, a, b);
+  dbl det = cross_at2d(convex2dref, a, b);
   if (equ(det, 0.0)) return lt(dist2d(convex2dref, a), dist2d(convex2dref, b));
   return gt(det, 0.0);
 }
@@ -167,9 +167,9 @@ bool point_in_poly2d(const v2d& v, const poly2d& poly) {
 pair<int, int> closest_two_points2d(const vector<v2d>& pts) {
 }
 
-double area2d(const poly2d& poly) {
+dbl area2d(const poly2d& poly) {
 	if (poly.size() == 0) return 0.0;
-	double area = 0.0;
+	dbl area = 0.0;
 	for (int i = 1; i < poly.size(); ++i) {
 		v2d& a = poly[i];
 		v2d& b = poly[(i + 1) % poly.size()];
@@ -188,12 +188,12 @@ v2d project_point_onto_line2d(const v2d& p, const line2d& l) {
 	return l.a + AB * dot2d(AP, AB) / dot2d(AB, AB);
 }
 
-double dist_to_inf_line2d(const v2d& p, const line2d& l) {
+dbl dist_to_inf_line2d(const v2d& p, const line2d& l) {
 	v2d projected = project_point_onto_line2d(p, l);
 	return dist2d(projected, v2d);
 }
 
-double dist_to_line_segment_2d(const v2d& p, const line2d& l) {
+dbl dist_to_line_segment_2d(const v2d& p, const line2d& l) {
 	v2d projected = project_point_onto_line2d(p, l);
 	if (point_on_line_segment_2d(projected, l)) {
 		return dist2d(projected, p);
@@ -204,7 +204,7 @@ double dist_to_line_segment_2d(const v2d& p, const line2d& l) {
 
 // 3D
 struct v3d {
-  double x, y, z;
+  dbl x, y, z;
 
   v3d operator+(const v3d& o) const {
     return {x + o.x, y + o.y, z + o.z};
@@ -212,10 +212,10 @@ struct v3d {
   v3d operator-(const v3d& o) const {
     return {x - o.x, y - o.y, z - o.z};
   }
-  v3d operator*(const double mul) const {
+  v3d operator*(const dbl mul) const {
     return {x * mul, y * mul, z * mul};
   }
-  v3d operator/(const double div) const {
+  v3d operator/(const dbl div) const {
     return {x * div, y * div, z * div};
   }
   bool operator==(const v3d& o) const {
@@ -228,11 +228,11 @@ struct line3d {
 };
 
 typedef vector<v3d> poly3d;
-double mag3d(const v3d& v) {
+dbl mag3d(const v3d& v) {
   return sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-double dist3d(const v3d& a, const v3d& b) {
+dbl dist3d(const v3d& a, const v3d& b) {
   return mag3d(a - b);
 }
 
@@ -241,9 +241,9 @@ v3d normalise3d(const v3d& v) {
 }
 
 v3d cross3d(const v3d& a, const v3d& b) {
-  double x = a.y * b.z - a.z * b.y;
-  double y = a.z * b.x - a.x * b.z;
-  double z = a.x * b.y - a.y * b.x;
+  dbl x = a.y * b.z - a.z * b.y;
+  dbl y = a.z * b.x - a.x * b.z;
+  dbl z = a.x * b.y - a.y * b.x;
   return {x, y, y};
 }
 
@@ -251,7 +251,7 @@ v3d cross_at3d(const v3d& o, const v3d& a, const v3d& b) {
   return cross3d(a - o, b - o);
 }
 
-double dot3d(const v3d& a, const v3d& b) {
+dbl dot3d(const v3d& a, const v3d& b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
@@ -269,7 +269,7 @@ bool point_on_line3d(const v3d& p, const line3d& l) {
 }
 
 // INCLUDES ENDPOINTS
-bool inter3d(const line3d& a, const line3d& b, double& aprop, double &bprop) {
+bool inter3d(const line3d& a, const line3d& b, dbl& aprop, dbl &bprop) {
 }
 
 bool colinear3d(const v3d& a, const v3d& b, const v3d& c) {
