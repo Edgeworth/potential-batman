@@ -18,6 +18,13 @@ struct v2d {
   bool operator==(const v2d& o) const {
     return equ(x, o.x) && equ(y, o.y);
   }
+  bool operator!=(const v2d& o) const {
+    return !(*this == o);
+  }
+  bool operator<(const v2d& o) const {
+    if (x != o.x) return x < o.x;
+    return y < o.y;
+  }
 };
 
 struct line2d {
@@ -68,6 +75,17 @@ v2d reflect2d(const v2d& r, const v2d& n) {
   return dot2d(n, r) * 2.0 - r;
 }
 
+// REQUIRES NON-ZERO LENGTH LINE.
+dbl prop_along_line2d(const v2d& p, const line2d& l) {
+  v2d AP = p - l.a;
+  v2d AB = l.b - l.a;
+  if (equ(AB.x, 0.0)) {
+    return AP.y / AB.y;
+  } else {
+    return AP.x / AB.x;
+  }
+}
+
 bool point_on_line_inf2d(const v2d& p, const line2d& l) {
   return equ(cross_at2d(l.a, l.b, p), 0.0);
 }
@@ -75,34 +93,70 @@ bool point_on_line_inf2d(const v2d& p, const line2d& l) {
 bool point_on_line_segment2d(const v2d& p, const line2d& l, bool include) {
   dbl l_minx = min(l.a.x, l.b.x);
   dbl l_maxx = max(l.a.x, l.b.x);
+  dbl l_miny = min(l.a.y, l.b.y);
+  dbl l_maxy = max(l.a.y, l.b.y);
   // To not include endpoints, remove eq's.
   if (!point_on_line_inf2d(p, l)) return false;
-  if (include) return gteq(p.x, l_minx) && lteq(p.x, l_maxx);
-  else return gt(p.x, l_minx) && lt(p.x, l_maxx);
+  return gti(p.x, l_minx, include) &&
+         lti(p.x, l_maxx, include) &&
+         gti(p.y, l_miny, include) &&
+         lti(p.y, l_miny, include);
 }
 
-// Extend to include finding the line segment for infinite
-// intersection
-bool inter2d(const line2d& a, const line2d& b, dbl& aprop, dbl& bprop, v2d& point, bool include) {
-  if ((a.a == b.a && a.b == b.b)  || (a.a == b.b && a.b == b.a)) return true;
+// In the case of infinite intersections, aprop, bprop and
+// inter_line are computed with respect to line |a|'s
+// direction and the first point of intersection being the
+// first point on |a|.
+bool inter2d(
+    const line2d& a, const line2d& b, bool include,
+    dbl& aprop, dbl& bprop,
+    line2d& inter_line, bool& infinite) {
+  if ((a.a == b.a && a.b == b.b) || 
+      (a.a == b.b && a.b == b.a)) {
+    inter_line = a;
+    aprop = 0.0;
+    bprop = prop_along_line2d(a.a, b);
+    infinite = !(l.a == l.b);
+    return true;
+  }
   dbl a = b.a.x - a.a.x, b = b.b.x - b.a.x, c = a.b.x - a.a.x;
   dbl c = b.a.y - a.a.y, e = b.b.y - b.a.y, f = a.b.y - a.a.y;
   dbl bfce = b * f - c * e;
   
   if (equ(bfce, 0.0)) {
-    // For no endpoints, change this FN to not include
-    // endpoints.
-    return point_on_line_segment2d(a.a, b, include) ||
-        point_on_line_segment2d(b.a, a, include) ||
-        point_on_line_segment2d(a.b, b, include) ||
-        point_on_line_segment2d(b.b, a, include);
+    vector<pair<dbl, v2d>> points;
+    if (point_on_line_segment2d(a.a, b, include)) {
+      points.emplace_back(0.0, a.a);
+    }
+    if (point_on_line_segment2d(a.b, b, include)) {
+      points.emplace_back(1.0, a.a);
+    }
+    if (point_on_line_segment2d(b.a, a, include)) {
+      points.emplace_back(prop_along_line2d(b.a, a), a.a);
+    }
+    if (point_on_line_segment2d(b.b, a, include)) {
+      points.emplace_back(prop_along_line2d(b.b, a), a.a);
+    }
+    sort(points.begin(), points.end());
+
+    if (inter_line.size() == 0) {
+      return false;
+    } else {
+      inter_line = {points.front(), points.back()};
+      infinite = inter_line.a != inter_line.b;
+      aprop = prop_along_line2d(inter_line.a, a);
+      bprop = prop_along_line2d(inter_line.a, b);
+      return true;
+    }
   }
 
+  infinite = false;
   aprop = (b * d - a * e) / bfce;
   bprop = (c * d - a * f) / bfce;
-  // For no endpoints, remove eq's.
-  if (include) return gteq(aprop, 0.0) && lteq(aprop, 1.0) && gteq(bprop, 0.0) && lteq(bprop, 1.0);
-  else (include) return gt(aprop, 0.0) && lt(aprop, 1.0) && gt(bprop, 0.0) && lt(bprop, 1.0);
+  v2d inter_point = a.a + (a.b - a.a) * aprop;
+  inter_line = {inter_point, inter_point};
+  return gti(aprop, 0.0) && lti(aprop, 1.0) &&
+         gti(bprop, 0.0) && lti(bprop, 1.0);
 }
 
 bool colinear2d(const v2d& a, const v2d& b, const v2d& c) {
