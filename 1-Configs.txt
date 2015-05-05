@@ -2,7 +2,7 @@ Configs
 
 ## .vimrc
 
-    set sw=4 ts=4 nu mouse=a hlsearch ignorecase scs
+    set nu sw=4 ts=4 sts=4 mouse=a hls ignorecase scs
     filetype plugin indent on 
     inoremap jj <Esc>
     nnoremap j gj
@@ -10,5 +10,5 @@ Configs
 
 ## .bashrc
 
-    function c { g++ -g -Wall -std=gnu++11 -o $1 $1.cpp  &&
-                 ./$1 < $1.in ; }
+    function c { g++ -std=gnu++11 -g -O2 -Wall -o $1 $1.cpp 
+                 && ./$1 < $1.in ; }
