@@ -73,4 +73,19 @@ bool gt(dbl a, dbl b) {
   return a > b + EP;
 }
 
+bool lti(dbl a, dbl b, bool include) {
+  if (include) {
+    return lteq(a, b);
+  } else {
+    return lt(a, b);
+  }
+}
+
+bool gti(dbl a, dbl b, bool include) {
+  if (include) {
+    return gteq(a, b);
+  } else {
+    return gt(a, b);
+  }
+}
 #endif

@@ -1,0 +1,14 @@
+Configs
+
+## .vimrc
+
+    set nu sw=4 ts=4 sts=4 mouse=a hls ignorecase scs
+    filetype plugin indent on 
+    inoremap jj <Esc>
+    nnoremap j gj
+    nnoremap k gk
+
+## .bashrc
+
+    function c { g++ -std=gnu++11 -g -O2 -Wall -o $1 $1.cpp 
+                 && ./$1 < $1.in ; }
