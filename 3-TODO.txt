@@ -46,7 +46,6 @@
 - Brent's cycle detection algorithm
 - Systems of inequalities with Bellman-Ford
 - Euler's totient function
-- Chinese remainder theorem
 
 ## Comp Geom
 
