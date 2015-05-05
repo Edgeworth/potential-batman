@@ -6,17 +6,16 @@ typedef vector<vl> vvl;
 /* START SOLUTION */
 
 // dists : adj matrix with LLONG_MAX/2 representing no edge
-// dads  : dads[i][j] is the penultimate node on the path i
-//         to j. Start dads[i][j] = i for each edge i,j
-void floyd_warshall(vvl& dists, vvi& dads) {
+// next  : next[i][j] is the next node on the path i to j. 
+//         Start next[i][j] = i for each edge i,j
+void floyd_warshall(vvl& dists, vvi& next) {
   int N = dists.size();
   for (int k = 0; k < N; k++) {
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
-        if (k == i || k == j) continue; // TODO
         if (dists[i][k] + dists[k][j] < dists[i][j]) {
           dists[i][j] = dists[i][k] + dists[k][j];
-          dads[i][j] = dads[k][j];
+          next[i][j] = next[i][k];
         }
       }
     }
@@ -41,25 +40,25 @@ void simple_test() {
     {I, 9, 5, I, 0},
   };
   int N = dists.size();
-  vvi dads(N, vi(N, -1));
+  vvi next(N, vi(N, -1));
   for (int i = 0; i < N; i++)
     for (int j = 0; j < N; j++)
-      if (i != j && dists[i][j] < I) dads[i][j] = i;
+      if (i != j && dists[i][j] < I) next[i][j] = j;
 
   for (auto& a : dists) {
     for (ll d : a) cout << d << " ";
     cout << endl;
   }
 
-  floyd_warshall(dists, dads);
+  floyd_warshall(dists, next);
 
   cout << "after: " << endl;
   for (auto& a : dists) {
     for (ll d : a) cout << d << " ";
     cout << endl;
   }
-  cout << endl << "dads: " << endl;
-  for (auto& a : dads) {
+  cout << endl << "next: " << endl;
+  for (auto& a : next) {
     for (int d : a) cout << d << " ";
     cout << endl;
   }
@@ -98,18 +97,18 @@ void solve_trip_routing() {
   int N = cti.size();
 
   vvl adj(N, vl(N, LLONG_MAX/2));
-  vvi dads(N, vi(N, -1));
+  vvi next(N, vi(N, -1));
   for (int i = 0; i < N; i++) adj[i][i] = 0;
   for (auto& kv : edge_map) {
     int i = kv.first.first;
     int j = kv.first.second;
     adj[i][j] = kv.second.first;
     adj[j][i] = kv.second.first;
-    dads[i][j] = i;
-    dads[j][i] = j;
+    next[i][j] = j;
+    next[j][i] = i;
   }
 
-  floyd_warshall(adj, dads);
+  floyd_warshall(adj, next);
 
   while (!cin.eof()) {
     string line;
@@ -121,25 +120,22 @@ void solve_trip_routing() {
     int t = cti[line.substr(pos+1)];
     ll dist = adj[f][t];
 
-    vpii r;
-    while (t != f) {
-      r.push_back({dads[f][t], t});
-      t = dads[f][t];
-    }
-
     cout << "\n\n";
     cout << "From                 To                   Route      Miles\n";
     cout << "-------------------- -------------------- ---------- -----\n";
-    for (int i = r.size()-1; i >= 0; --i) {
-      int a = r[i].first;
-      int b = r[i].second;
+    while (f != t) {
+      int a = f;
+      int n = next[f][t];
+
       cout << left;
       cout << setw(21) << itc[a];
-      cout << setw(21) << itc[b];
-      if (edge_map.find({a,b}) == edge_map.end()) swap(a,b);
-      cout << setw(11) << edge_map[{a,b}].second;
-      cout << setw(5) << right << edge_map[{a,b}].first << left;
+      cout << setw(21) << itc[n];
+      if (edge_map.find({a,n}) == edge_map.end()) swap(a,n);
+      cout << setw(11) << edge_map[{a,n}].second;
+      cout << setw(5) << right << edge_map[{a,n}].first << left;
       cout << endl;
+
+      f = next[f][t];
     }
     cout << "                                                     -----\n";
     cout << "                                          Total      " << setw(5) << right << dist << left << endl;
