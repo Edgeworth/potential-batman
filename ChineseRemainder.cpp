@@ -41,49 +41,49 @@ tuple<ll, ll> xgcd(ll a, ll b) {
 // integer k
 // we do not handle the non-coprime case
 ll chinese_remainder(const vll& ns, const vll& as) {
-    ll x = 0;
-    ll N = 1;
-    for(ll n : ns) N *= n;
+  ll x = 0;
+  ll N = 1;
+  for(ll n : ns) N *= n;
 
-    for(int i = 0; i < ns.size(); ++i) {
-        ll s;
-        tie(s, _) = xgcd(N / ns[i], ns[i]);
-        s *= N / ns[i];
-        // s = s mod N (works even with negative s)
-        s = (s % N + N) % N;
-         
-        x += as[i] * s;
-        x = x % N;
-    }
+  for(int i = 0; i < ns.size(); ++i) {
+    ll s;
+    tie(s, _) = xgcd(N / ns[i], ns[i]);
+    s *= N / ns[i];
+    // s = s mod N (works even with negative s)
+    s = (s % N + N) % N;
+     
+    x += as[i] * s;
+    x = x % N;
+  }
 
-    return x;
+  return x;
 }
 
 int simple_test() {
-    // x = 2 mod 3, x = 3 mod 4, x = 1 mod 5
-    //     => x = 11 mod 60
-    cout << chinese_remainder({3, 4, 5}, {2, 3, 1}) << "\n";
-    return 0;
+  // x = 2 mod 3, x = 3 mod 4, x = 1 mod 5
+  //   => x = 11 mod 60
+  cout << chinese_remainder({3, 4, 5}, {2, 3, 1}) << "\n";
+  return 0;
 }
 
 int solve_biorythms() {
-    const int N = 23 * 28 * 33;
-    int caze = 1;
-    while(true) {
-        ll p, e, i, d, x;
-        cin >> p >> e >> i >> d;
+  const int N = 23 * 28 * 33;
+  int caze = 1;
+  while(true) {
+    ll p, e, i, d, x;
+    cin >> p >> e >> i >> d;
 
-        if(p == -1) break;
+    if(p == -1) break;
 
-        x = chinese_remainder({23, 28, 33}, {p % 23, e % 28, i % 33});
-        ll ans = x - d;
-        if(ans <= 0) ans += N;
-        cout << "Case " << caze++ << ": the next triple peak occurs in "
-             << ans << " days.\n";
-    }
-    return 0;
+    x = chinese_remainder({23, 28, 33}, {p % 23, e % 28, i % 33});
+    ll ans = x - d;
+    if(ans <= 0) ans += N;
+    cout << "Case " << caze++ << ": the next triple peak occurs in "
+       << ans << " days.\n";
+  }
+  return 0;
 }
 
 int main() {
-    return solve_biorythms();
+  return solve_biorythms();
 }
