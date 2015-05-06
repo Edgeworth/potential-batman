@@ -1,5 +1,7 @@
 #include "Defines.h"
 
+/* START SOLUTION */
+
 struct v2d {
   dbl x, y;
 
@@ -29,6 +31,17 @@ struct v2d {
 
 struct line2d {
   v2d a, b;
+
+  bool operator==(const line2d& o) const {
+    return equ(a, o.a) && equ(b, o.b);
+  }
+  bool operator!=(const line2d& o) const {
+    return !(*this == o);
+  }
+  bool operator<(const line2d& o) const {
+    if (a != o.a) return a < o.a;
+    return b < o.b;
+  }
 };
 
 typedef vector<v2d> poly2d;
@@ -55,12 +68,12 @@ v2d cross_at2d(const v2d& o, const v2d& a, const v2d& b) {
 
 // Strict.
 bool is_strictly_left_of(const v2d& p, const line2d& l) {
-	return gt(cross_at2d(l.a, l.b, p), 0.0);
+  return gt(cross_at2d(l.a, l.b, p), 0.0);
 }
 
 // Strict.
 bool is_strictly_right_of(const v2d& p, const line2d& l) {
-	return le(cross_at2d(l.a, l.b, p), 0.0);
+  return le(cross_at2d(l.a, l.b, p), 0.0);
 }
 
 v2d dot2d(const v2d& a, const v2d& b) {
@@ -72,6 +85,7 @@ v2d normal_of2d(const v2d& v) {
 }
 
 v2d reflect2d(const v2d& r, const v2d& n) {
+  v2d normn = normalise2d(n);
   return dot2d(n, r) * 2.0 - r;
 }
 
@@ -90,7 +104,8 @@ bool point_on_line_inf2d(const v2d& p, const line2d& l) {
   return equ(cross_at2d(l.a, l.b, p), 0.0);
 }
 
-bool point_on_line_segment2d(const v2d& p, const line2d& l, bool include) {
+bool point_on_line_segment2d(
+    const v2d& p, const line2d& l, bool include) {
   dbl l_minx = min(l.a.x, l.b.x);
   dbl l_maxx = max(l.a.x, l.b.x);
   dbl l_miny = min(l.a.y, l.b.y);
@@ -119,8 +134,12 @@ bool inter2d(
     infinite = !(l.a == l.b);
     return true;
   }
-  dbl a = b.a.x - a.a.x, b = b.b.x - b.a.x, c = a.b.x - a.a.x;
-  dbl c = b.a.y - a.a.y, e = b.b.y - b.a.y, f = a.b.y - a.a.y;
+  dbl a = b.a.x - a.a.x;
+  dbl b = b.b.x - b.a.x;
+  dbl c = a.b.x - a.a.x;
+  dbl d = b.a.y - a.a.y;
+  dbl e = b.b.y - b.a.y;
+  dbl f = a.b.y - a.a.y;
   dbl bfce = b * f - c * e;
   
   if (equ(bfce, 0.0)) {
@@ -164,11 +183,14 @@ bool colinear2d(const v2d& a, const v2d& b, const v2d& c) {
 }
 
 
-v2d convex2dref;
+v2d c2dref;
 bool convex2dcomp(const v2d& a, const v2d& b) {
-  dbl det = cross_at2d(convex2dref, a, b);
-  if (equ(det, 0.0)) return lt(dist2d(convex2dref, a), dist2d(convex2dref, b));
-  return gt(det, 0.0);
+  dbl det = cross_at2d(c2dref, a, b);
+  if (equ(det, 0.0)) {
+    return lt(dist2d(c2dref, a), dist2d(c2dref, b));
+  } else {
+    return gt(det, 0.0);
+  }
 }
 
 // Produces CCW points not including the last point.
@@ -176,15 +198,17 @@ bool convex2dcomp(const v2d& a, const v2d& b) {
 poly2d convex2d(const vector<v2d>& pts) {
   int min_i = 0;
   for (int i = 1; i < pts.size(); ++i) {
-    if (lt(pts[i].x, pts[min_i]) || (equ(pts[i].x, pts[min_i].x) && lt(pts[i].y, pts[min_i].y))) {
+    if (lt(pts[i].x, pts[min_i]) ||
+        (equ(pts[i].x, pts[min_i].x) &&
+         lt(pts[i].y, pts[min_i].y))) {
       min_i = i;
     }
   }
   swap(pts[min_i], pts.back());
-  convex2dref = pts.back();
+  c2dref = pts.back();
   pts.pop_back();
   sort(pts.begin(), pts.end());
-  vector<v2d> convex = {convex2dref, pts[0]};
+  vector<v2d> convex = {c2dref, pts[0]};
   for (int i = 1; i < pts.size(); ++i) {
     while (convex.size() >= 3) {
       v2d& top = convex[convex.size() - 1];
@@ -202,60 +226,80 @@ poly2d convex2d(const vector<v2d>& pts) {
   return convex;
 }
 
-// DOESN'T HANDLE HOLES. DOESN'T INCLUDE BOUNDARY. SELF-INTERSECTING COUNTED AS INTERSECTION.
+// DOESN'T HANDLE HOLES. DOESN'T INCLUDE BOUNDARY.
+// SELF-INTERSECTING COUNTED AS INTERSECTION.
 // REQUIRES CCW POLYGON.
 bool point_in_poly2d(const v2d& v, const poly2d& poly) {
-	int wn = 0;
-	for (int i = 0; i < poly.size(); ++i) {
-		const v2d& a = poly[i];
-		const v2d& b = poly[(i + 1) % poly.size()];
-		if (a.y <= v.y && b.y > v.y && is_strictly_left_of(v, {a, b})) {
-			wn++;
-		} else if (a.y >= v.y && b.y < v.y && is_strictly_right_of(v, {a, b)) {
-			wn--;
-		}
-	}
-	
-	return wn == 0;
+  int wn = 0;
+  for (int i = 0; i < poly.size(); ++i) {
+    const v2d& a = poly[i];
+    const v2d& b = poly[(i + 1) % poly.size()];
+    if (a.y <= v.y && b.y > v.y &&
+        is_strictly_left_of(v, {a, b})) {
+      wn++;
+    } else if (a.y >= v.y && b.y < v.y &&
+        is_strictly_right_of(v, {a, b)) {
+      wn--;
+    }
+  }
+  
+  return wn == 0;
 }
 
 // RETURNS INDICIES
 pair<int, int> closest_two_points2d(const vector<v2d>& pts) {
 }
 
-dbl area2d(const poly2d& poly) {
-	if (poly.size() == 0) return 0.0;
-	dbl area = 0.0;
-	for (int i = 1; i < poly.size(); ++i) {
-		v2d& a = poly[i];
-		v2d& b = poly[(i + 1) % poly.size()];
-		area += cross2d(poly[0], a, b);
-	}
-	return area / 2.0;
+// BENTLEY-OTTMANN
+vector<v2d> all_inter_points2d(const vector<line2d>& lines) {
 }
 
+dbl area2d(const poly2d& poly) {
+  if (poly.size() == 0) return 0.0;
+  dbl area = 0.0;
+  for (int i = 1; i < poly.size(); ++i) {
+    v2d& a = poly[i];
+    v2d& b = poly[(i + 1) % poly.size()];
+    area += cross2d(poly[0], a, b);
+  }
+  return area / 2.0;
+}
+
+// Requires NON-ZERO POLY.
 v2d centroid2d(const poly2d& poly) {
+  dbl x = 0.0;
+  dbl y = 0.0;
+  dbl area = area2d(poly);
+  for (int i = 0; i < poly.size(); ++i) {
+    v2d& a = poly[i];
+    v2d& b = poly[(i + 1) % poly.size()];
+    dbl cross = cross2d(a, b);
+    x += (a.x + b.x) * cross;
+    y += (a.y + b.y) * cross;
+  }
+
+  return {x / (6.0 * area), y / (6.0 * area)};
 }
 
 // REQUIRES NON-ZERO LENGTH LINE.
 v2d project_point_onto_line2d(const v2d& p, const line2d& l) {
-	v2d AP = l.a - p;
-	b2d AB = l.b - l.a;
-	return l.a + AB * dot2d(AP, AB) / dot2d(AB, AB);
+  v2d AP = l.a - p;
+  b2d AB = l.b - l.a;
+  return l.a + AB * dot2d(AP, AB) / dot2d(AB, AB);
 }
 
 dbl dist_to_inf_line2d(const v2d& p, const line2d& l) {
-	v2d projected = project_point_onto_line2d(p, l);
-	return dist2d(projected, v2d);
+  v2d projected = project_point_onto_line2d(p, l);
+  return dist2d(projected, v2d);
 }
 
 dbl dist_to_line_segment_2d(const v2d& p, const line2d& l) {
-	v2d projected = project_point_onto_line2d(p, l);
-	if (point_on_line_segment_2d(projected, l)) {
-		return dist2d(projected, p);
-	}
+  v2d projected = project_point_onto_line2d(p, l);
+  if (point_on_line_segment_2d(projected, l)) {
+    return dist2d(projected, p);
+  }
 
-	return min(dist2d(p, l.a), dist2d(p, l.b));
+  return min(dist2d(p, l.a), dist2d(p, l.b));
 }
 
 // 3D
@@ -277,10 +321,29 @@ struct v3d {
   bool operator==(const v3d& o) const {
     return equ(x, o.x) && equ(y, o.y) && equ(z, o.z);
   }
+  bool operator!=(const v2d& o) const {
+    return !(*this == o);
+  }
+  bool operator<(const v2d& o) const {
+    if (x != o.x) return x < o.x;
+    if (y != o.y) return y < o.y;
+    return z < o.z;
+  }
 };
 
 struct line3d {
   v3d a, b;
+
+  bool operator==(const line3d& o) const {
+    return equ(a, o.a) && equ(b, o.b);
+  }
+  bool operator!=(const line3d& o) const {
+    return !(*this == o);
+  }
+  bool operator<(const line3d& o) const {
+    if (a != o.a) return a < o.a;
+    return b < o.b;
+  }
 };
 
 typedef vector<v3d> poly3d;
@@ -311,7 +374,6 @@ dbl dot3d(const v3d& a, const v3d& b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-// 
 v3d normal_of3d(const v3d& a, const v3d& b) {
   return normalise3d(cross3d(a, b));
 }
@@ -320,19 +382,115 @@ v3d reflect3d(const v3d& r, const v3d& n) {
   return dot3d(r, n) * 2.0 - r;
 }
 
-// INCLUDES ENDPOINTS
-bool point_on_line3d(const v3d& p, const line3d& l) {
+/* END SOLUTION */
+#include <cstdio>
+
+void print_v2d(const v2d& v) {
+  printf("(%.3f, %.3f)", v.x, v.y);
 }
 
-// INCLUDES ENDPOINTS
-bool inter3d(const line3d& a, const line3d& b, dbl& aprop, dbl &bprop) {
+void print_line2d(const line2d& v) {
+  printf("{");
+  print_v2d(l.a);
+  printf(", ");
+  print_v2d(l.b);
+  printf("}");
 }
 
-bool colinear3d(const v3d& a, const v3d& b, const v3d& c) {
+void assert_equal(const dbl& expected, const dbl& actual) {
+  if (expected != actual) {
+    printf("Expected: %.3f\nGot: %.3f\n", expected, actual);
+    exit(1);
+  }
 }
 
-// ASSUMES |POLY| IS COPLANAR
-poly2d project_poly_to_2d(const poly3d& poly) {
+void assert_equal(const v2d& expected, const v2d& actual) {
+  if (expected != actual) {
+    printf("Expected: ");
+    print_v2d(expected);
+    printf("\nGot: ");
+    print_v2d(actual);
+    printf("\n");
+    exit(1);
+  }
 }
 
+void assert_equal(const line2d& expected, const line2d& actual) {
+  if (expected != actual) {
+    printf("Expected: ");
+    print_line2d(expected);
+    printf("\nGot: ");
+    print_line2d(actual);
+    printf("\n");
+    exit(1);
+  }
+}
 
+void test() {
+  // dbl mag2d(const v2d& v);
+  assert_equal(sqrt(2), mag2d({1, 1}));
+  assert_equal(2, mag2d({0, 2}));
+  assert_equal(0, mag2d({0, 0}));
+  
+  // dbl dist2d(const v2d& a, const v2d& b);
+  assert_equal(sqrt(2), dist2d({0, 0}, {1, 1}));
+  assert_equal(sqrt(2), dist2d({2, 2}, {1, 1}));
+
+  // v2d normalise2d(const v2d& v);
+  assert_equal({1 / sqrt(2), 1 / sqrt(2)}, normalise2d({100, 100}));
+  assert_equal({1, 0}, normalise2d({100, 0}));
+  
+  // v2d cross2d(const v2d& a, const v2d& b);
+  assert_equal(-25.548, cross2d({1.32, 5.32}, {5.1, 1.2}));
+  assert_equal(25.548, cross2d({5.1, 1.2}, {1.32, 5.32}));
+  
+  // v2d cross_at2d(const v2d& o, const v2d& a, const v2d& b);
+  assert_equal(25.548, cross_at2d({0, 0}, {5.1, 1.2}, {1.32, 5.32}));
+  assert_equal(8.824 * 2.0, cross_at2d({1, 1}, {5.1, 1.2}, {1.32, 5.32}));
+  
+  // bool is_strictly_left_of(const v2d& p, const line2d& l);
+  // bool is_strictly_right_of(const v2d& p, const line2d& l);
+  assert(is_strictly_left_of({3, 3}, {{1, 1}, {4, 3}}));
+  assert(!is_strictly_right_of({3, 3}, {{1, 1}, {4, 3}}));
+  assert(!is_strictly_left_of({3, 2}, {{1, 1}, {4, 3}}));
+  assert(!is_strictly_right_of({3, 2}, {{1, 1}, {4, 3}}));
+  
+  // v2d dot2d(const v2d& a, const v2d& b);
+  assert_equal(13.116, dot2d({5.1, 1.2}, {1.32, 5.32}));
+
+  // v2d normal_of2d(const v2d& v);
+  assert_equal({}, normal_of2d({1.32, 5.32}));
+
+  // v2d reflect2d(const v2d& r, const v2d& n);
+  assert_equal({
+
+  // dbl prop_along_line2d(const v2d& p, const line2d& l);
+
+  // bool point_on_line_inf2d(const v2d& p, const line2d& l);
+
+  // bool point_on_line_segment2d(const v2d& p, const line2d& l, bool include);
+
+  // bool inter2d(const line2d& a, const line2d& b, bool include,
+  //              dbl& aprop, dbl& bprop, line2d& inter_line, bool& infinite);
+
+  // bool colinear2d(const v2d& a, const v2d& b, const v2d& c);
+
+  // bool convex2dcomp(const v2d& a, const v2d& b);
+
+  // poly2d convex2d(const vector<v2d>& pts);
+
+  // bool point_in_poly2d(const v2d& v, const poly2d& poly);
+
+  // pair<int, int> closest_two_points2d(const vector<v2d>& pts);
+
+  // dbl area2d(const poly2d& poly);
+
+  // v2d centroid2d(const poly2d& poly);
+
+  // v2d project_point_onto_line2d(const v2d& p, const line2d& l);
+
+  // dbl dist_to_inf_line2d(const v2d& p, const line2d& l);
+
+  // dbl dist_to_line_segment_2d(const v2d& p, const line2d& l);
+
+}
