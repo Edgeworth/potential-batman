@@ -4,15 +4,15 @@
 /* START SOLUTION */
 
 // do not use for neg values
-pair<ll, ll> xgcd_pos(ll a, ll b) {
-  if(b == 0) return pair<ll, ll>(1, 0);
+tuple<ll, ll> xgcd_pos(ll a, ll b) {
+  if(b == 0) return make_tuple(1, 0);
   
   ll r = a % b;
   ll q = a / b;
   
-  pair<ll, ll> rec = xgcd_pos(b, r);
-  return pair<ll, ll>(rec.second, 
-      rec.first - q * rec.second);
+  ll s, t;
+  tie(s, t) = xgcd_pos(b, r);
+  return make_tuple(t, s - q * t);
 }
   
 // returns (s, t) s.t. gcd(a, b) = sa + tb
@@ -23,10 +23,10 @@ pair<ll, ll> xgcd_pos(ll a, ll b) {
 // satisfying the same equation is given by:
 // (s + k * b / gcd(a, b), t - k * a / gcd(a, b))
 // for k ranging over the integers
-pair<ll, ll> xgcd(ll a, ll b) {
-  pair<ll, ll> res = xgcd_pos(abs(a), abs(b));
-  res.first *= (a < 0) ? -1 : 1;
-  res.second *= (b < 0) ? -1 : 1;
+tuple<ll, ll> xgcd(ll a, ll b) {
+  tuple<ll, ll> res = xgcd_pos(abs(a), abs(b));
+  get<0>(res) *= (a < 0) ? -1 : 1;
+  get<1>(res) *= (b < 0) ? -1 : 1;
   
   return res;
 }
@@ -37,11 +37,11 @@ int test() {
   ll ps[4][2] = {{13, 7}, {-13, 7}, {-13, -7}, {13, -7}};
   
   for(int i = 0; i < 4; i++) {
-    pair<ll, ll> res = xgcd(ps[i][0], ps[i][1]);
+    tuple<ll, ll> res = xgcd(ps[i][0], ps[i][1]);
   
-    cout << res.first << " * " << ps[i][0]  << " + " << 
-      res.second << " * " << ps[i][1] << " = " <<
-      res.first * ps[i][0] + res.second * ps[i][1] << endl;
+    cout << get<0>(res) << " * " << ps[i][0]  << " + " << 
+      get<1>(res) << " * " << ps[i][1] << " = " <<
+      get<0>(res) * ps[i][0] + get<1>(res) * ps[i][1] << endl;
   }
   return 0;
 }
@@ -58,8 +58,8 @@ int solve_marbles() {
     ll c1, n1, c2, n2;
     cin >> c1 >> n1 >> c2 >> n2;
 
-    const pair<ll, ll> st = xgcd(n1, n2);
-    const ll s = st.first, t = st.second;
+    ll s, t;
+    tie(s, t) = xgcd(n1, n2);
     const ll d = s * n1 + t * n2;
 
     if(n % d != 0) {

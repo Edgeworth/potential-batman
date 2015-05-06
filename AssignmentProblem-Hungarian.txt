@@ -1,0 +1,15 @@
+The Assignment Problem - Hungarian Algorithm
+O(n^3)
+
+The Hungarian algorithm computes the **maximum weighted
+matching** of a bipartite graph. You must use dummy nodes to
+make both halves the same size, using 0-weight edges to
+signify "unmatched"
+
+To signify that pairs can't be matched, use edges with
+weight -infinity and add *N* dummy nodes to each side with
+0-weight edges (to allow nodes to be unmatched).
+
+To compute the **minimum wieghted perfect matching** (such
+as assigning workers to tasks most cheaply) simply negate
+the edge weights. Dummy nodes still have 0-weight edges.
