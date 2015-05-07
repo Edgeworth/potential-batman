@@ -6,7 +6,6 @@
 - Min cost perfect matching (Hungarian algorithm?)
 - Min cost max flow
 - Articulation points (ben)
-- Bellman-Ford (+ cycle detection) (ben)
 - Blossom algorithm :(
 - K shortest paths / loops
 - Knights tour divide and conquer
