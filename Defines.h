@@ -50,7 +50,6 @@ typedef istringstream iss;
 #define _ ignore
 
 // used for comp geom and some maths
-
 const dbl EP = 1e-7;
 
 bool equ(dbl a, dbl b) {
@@ -88,4 +87,5 @@ bool gti(dbl a, dbl b, bool include) {
     return gt(a, b);
   }
 }
+
 #endif
