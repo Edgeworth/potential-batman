@@ -14,11 +14,11 @@ void run_sieve() {
   // to less than (int)sqrt(MAX_PRIME) + 1
   // IS_PRIME will still be correctly populated
   for(ll i = 2; i <= MAX_PRIME; ++i) {
-  if(!IS_PRIME[(int)i]) continue;
+    if(!IS_PRIME[(int)i]) continue;
 
-  PRIMES.push_back(i);
-  for(ll j = i * i; j <= MAX_PRIME; j += i)
-    IS_PRIME[(int)j] = false;
+    PRIMES.push_back(i);
+    for(ll j = i * i; j <= MAX_PRIME; j += i)
+      IS_PRIME[(int)j] = false;
   }
 }
 
@@ -30,12 +30,12 @@ void prime_facts(ll n, vll& pfs) {
   int p = 0;
   ll pfact = PRIMES[0];
   while(n != 1 && p < PRIMES.size() && pfact * pfact <= n) {
-  while(n % pfact == 0) {
-    n /= pfact;
-    pfs.push_back(pfact);
-  }
+    while(n % pfact == 0) {
+      n /= pfact;
+      pfs.push_back(pfact);
+    }
 
-  pfact = PRIMES[++p];
+    pfact = PRIMES[++p];
   }
 
   if(n != 1) pfs.push_back(n);
@@ -51,26 +51,26 @@ int solve_divisors() {
   cin >> N;
 
   for(int n = 0; n < N; ++n) {
-  ll L, U;
-  cin >> L >> U;
-  ll ma = -1, mac = -1;
-  for(int c = L; c <= U; ++c) {
-    vll pfs, ns;
-    prime_facts(c, pfs);
-    for(int i = 0; i < pfs.size(); ++i)
-    if(i == 0 || pfs[i] != pfs[i - 1]) ns.push_back(1);
-    else ++ns.back();
-    ll nfacts = 1;
-    for(ll np : ns) nfacts *= np + 1;
-    
-    if(nfacts > ma) {
-    ma = nfacts;
-    mac = c;
-    }
-  }
+    ll L, U;
+    cin >> L >> U;
+    ll ma = -1, mac = -1;
+    for(int c = L; c <= U; ++c) {
+      vll pfs, ns;
+      prime_facts(c, pfs);
+      for(int i = 0; i < pfs.size(); ++i)
+        if(i == 0 || pfs[i] != pfs[i - 1]) ns.push_back(1);
+        else ++ns.back();
+      ll nfacts = 1;
+      for(ll np : ns) nfacts *= np + 1;
 
-  cout << "Between " << L << " and " << U << ", " << mac
-     << " has a maximum of " << ma << " divisors.\n";
+      if(nfacts > ma) {
+        ma = nfacts;
+        mac = c;
+      }
+    }
+
+    cout << "Between " << L << " and " << U << ", " << mac
+      << " has a maximum of " << ma << " divisors.\n";
   }
   return 0;
 }
