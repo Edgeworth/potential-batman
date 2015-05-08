@@ -9,6 +9,5 @@ Configs
     nnoremap k gk
 
 ## .bashrc
-
-    function c { g++ -std=gnu++11 -g -O2 -Wall -o $1 $1.cpp 
-                 && ./$1 < $1.in ; }
+    function c { g++ -std=gnu++11 -g -O2 -Wall -o $1 $1.cpp &&
+                 ./$1 < $1.in ; }
