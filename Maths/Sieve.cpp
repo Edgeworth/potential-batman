@@ -2,7 +2,7 @@
 
 /* START SOLUTION */
 
-ll MAX_PRIME = 46342;
+ll MAX_PRIME = 110267;
 vl PRIMES;
 vb IS_PRIME(MAX_PRIME + 1, true);
 
@@ -16,12 +16,12 @@ void run_sieve() {
   // to less than (int)sqrt(MAX_PRIME) + 1
   // IS_PRIME will still be correctly populated
   for(ll i = 2; i <= MAX_PRIME; ++i) {
-  if(!IS_PRIME[(int)i]) continue;
+      if(!IS_PRIME[(int)i]) continue;
 
-  PRIMES.push_back(i);
-  for(ll j = i * i; j <= MAX_PRIME; j += i)
-    IS_PRIME[(int)j] = false;
-  }
+      PRIMES.push_back(i);
+      for(ll j = i * i; j <= MAX_PRIME; j += i)
+        IS_PRIME[(int)j] = false;
+      }
 }
 
 // only use after run_sieve
@@ -32,15 +32,40 @@ void prime_facts(ll n, vl& pfs) {
   int p = 0;
   ll pfact = PRIMES[0];
   while(n != 1 && p < PRIMES.size() && pfact * pfact <= n) {
-  while(n % pfact == 0) {
-    n /= pfact;
-    pfs.push_back(pfact);
-  }
+      while(n % pfact == 0) {
+        n /= pfact;
+        pfs.push_back(pfact);
+      }
 
-  pfact = PRIMES[++p];
+      pfact = PRIMES[++p];
   }
 
   if(n != 1) pfs.push_back(n);
+}
+
+// only use after run_sieve
+// returns the number of natural numbers less than or equal
+// to n that are coprime to n
+// tot(n) = Product( p_i ^ (e_i - 1) * (p_i - 1) ) where
+//          p_i appears with multiplicity e_i in prime 
+//          factorisation of n
+// tot(n) = n Product( 1 - 1/p ) where p ranges across all
+//          primes dividing n
+ll totient(ll n) {
+    vl pfs;
+    prime_facts(n, pfs);
+    ll tot = 1;
+    ll cur_run = 0;
+    for(int p = 0; p < pfs.size(); ++p) {
+        ++cur_run;
+
+        if(p == pfs.size() - 1 || pfs[p + 1] != pfs[p]) {
+            while(--cur_run != 0) tot *= pfs[p];
+            tot *= (pfs[p] - 1);
+        }
+    }
+
+    return tot;
 }
 
 /* END SOLUTION */
@@ -106,6 +131,56 @@ int solve_prime_factors() {
   return 0;
 }
 
+int simple_tot_test() {
+    run_sieve();
+    cout << "phi(1) = " << totient(1) << endl;
+    cout << "phi(2) = " << totient(2) << endl;
+    cout << "phi(6) = " << totient(6) << endl;
+    cout << "phi(10) = " << totient(10) << endl;
+    cout << "phi(72) = " << totient(72) << endl;
+
+    return 0;
+}
+
+// solve:
+// http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&category=&problem=2302
+ll gcd(ll a, ll b) { return b != 0 ? gcd(b, a % b) : a; }
+
+int solve_enum_rationals() {
+    run_sieve();
+
+    ll tot_count = 0;
+    ll denom = 1;
+    vl counts = {0};
+    while(tot_count <= 12158598919ll) {
+        tot_count += totient(denom);
+        counts.push_back(tot_count);
+        ++denom;
+    }
+
+    while(true) {
+        ll m;
+        cin >> m;
+
+        if(m == 0) break;
+        else if(m == 1) cout << "0/1\n";
+        else if(m == 2) cout << "1/1\n";
+        else {
+            --m;
+            ll d = 1;
+            while(m > counts[d]) ++d;
+            m -= counts[d - 1];
+
+            for(int f = 1; f < d; ++f) {
+                if(gcd(f, d) == 1 && --m == 0) {
+                    cout << f << "/" << d << "\n";
+                    break;
+                }
+            }
+        }
+    }
+}
+
 int main() {
-  return solve_prime_factors();
+  return solve_enum_rationals();
 }

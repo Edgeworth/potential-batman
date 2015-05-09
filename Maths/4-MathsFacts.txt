@@ -84,6 +84,8 @@
     - Bell numbers: the number of partitions of a set of n
       elements. Recurrence: B_0 = 1,
         B_{n+1} = Sum( (n, k) * B_k for k from 0 to n )
+    - Fibonnaci matrix formula:
+        [F_{n+1} F_n; F_n F_{n-1}] = [1 1; 1 0]^n
 
 - Quadratic formula
     - ax^2 + bx + c = 0 has solution
@@ -99,8 +101,17 @@
         s = (q^2 + (r - p^2)^3)^(1/2)
 
 - Geometric formulas
-    - For a triangle with angles A, B, C and sides a, b, c opposite
-      the angle of the same letter
+    - For a triangle with angles A, B, C and sides a, b, c
+      opposite the angle of the same letter
         - Cosine rule: a^2 = b^2 + c^2 - 2bc cos(A)
         - Sin rule: sin(A) / a = sin(B) / b = sin(C) / c
           (^ can give two answers!)
+        - Area: sqrt( s(s-a)(s-b)(s-c) ) where
+          s = (a + b + c) / 2
+    - Area of trapezoid with top and bottom side length of
+      b_1, b_2 and height (projected onto y axis) of h:
+        1/2 h (b_1 + b_2)
+    - Pyramid / cone volume: (1/3) b h, where b is area of
+      base and h is height (projected onto z axis)
+    - Ellipsoid volume: (4/3) pi r_1 r_2 r_3
+
