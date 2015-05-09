@@ -28,15 +28,9 @@
 
 - 2SAT
 - Kirchhoff's theorem :(
-- Number lists/formulas
-  - Carmichael numbers (43 numbers <= 10^6)
-  - TODO: add more
-- Fibonnaci with matrices
 - Polya counting (?? hopefully not)
 - Great circle distance
-- Fast matrix multiplication / power (?)
 - Systems of inequalities with Bellman-Ford
-- Euler's totient function
 
 ## Comp Geom
 

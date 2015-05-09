@@ -17,6 +17,7 @@ Maths Facts
       with k exactly disjoint cycles. Recurrence relation:
         s(0, 0) = 1, s(n, 0) = s(0, n) = 0, and
         s(n + 1, k) = n * s(n, k) + (n, k - 1)
+
 - Rings
     - Eisenstein's criterion:
         Q = a_n x^n + ... + a_1 x + a_0 with all as integers
@@ -67,6 +68,17 @@ Maths Facts
            which satisfy f(i) <= i for all i in {1,...,n}
         8) the number of ways to triangulate a polygon with
            n+2 vertices
+
+- Carmichael numbers
+    - Composite numbers n that pass the "prime test"
+        b^{n-1} = 1 mod n, for all 1 < b < n coprime to n
+    - List of all Carmichael numbers < 10^6:
+        561, 1105, 1729, 2465, 2821, 6601, 8911, 10585, 15841,
+        29341, 41041, 46657, 52633, 62745, 63973, 75361, 101101,
+        115921, 126217, 162401, 172081, 188461, 252601, 278545,
+        294409, 314821, 334153, 340561, 399001, 410041, 449065,
+        488881, 512461, 530881, 552721, 656601, 658801, 670033,
+        748657, 825265, 838201, 852841, 997633
 
 - Number theory
     - Wilson's theorem: (n - 1)! = -1 mod n <=> n prime
