@@ -24,9 +24,10 @@ typedef ld dbl;
 typedef tuple<dbl, dbl> vec2;
 typedef tuple<int, int, int> tiii;
 typedef pair<int, int> pii;
+typedef pair<ll, int> pli;
 
-typedef vector<ll> vll;
-typedef vector<vll> vvll;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
 
 typedef vector<dbl> vd;
 typedef vector<vd> vvd;
@@ -43,6 +44,9 @@ typedef vector<vs> vvs;
 typedef vector<pii> vpii;
 typedef vector<vpii> vvpii;
 typedef vector<tiii> vtiii;
+typedef vector<pli> vpli;
+typedef vector<vpli> vvpli;
+
 
 typedef ostringstream oss;
 typedef istringstream iss;

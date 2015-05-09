@@ -13,7 +13,7 @@
 // t      : the last visited node
 // n      : the number of nodes in the instance
 // returns: the cost of the minimum cycle through all nodes
-ll tsp(const vvll& g, vvll& dp, ll vis,
+ll tsp(const vvl& g, vvl& dp, ll vis,
      int t, int n) {
   // -1 means not yet calculated
   if(dp[vis][t] == -1) {
@@ -44,8 +44,8 @@ ll tsp(const vvll& g, vvll& dp, ll vis,
   return dp[vis][t];
 }
 
-ll tsp(const vvll& g) {
-  vvll dp(1<<g.size(), vll(g.size(), -1));
+ll tsp(const vvl& g) {
+  vvl dp(1<<g.size(), vl(g.size(), -1));
   return tsp(g, dp, (1<<g.size())-1, 0, g.size());
 }
 
@@ -69,7 +69,7 @@ int solve_beepers() {
       cin >> get<0>(ps[n]) >> get<1>(ps[n]);
     //cout << "size = " << ps.size();
     
-    vvll g(ps.size(), vll(ps.size()));
+    vvl g(ps.size(), vl(ps.size()));
     for(int v1 = 0; v1 < ps.size(); ++v1)
       for(int v2 = 0; v2 < ps.size(); ++v2)
         g[v1][v2] = abs(get<0>(ps[v1]) - get<0>(ps[v2])) +
@@ -83,7 +83,7 @@ int solve_beepers() {
 // solves example from http://en.wikipedia.org/wiki/Held%E2%80%93Karp_algorithm
 // optimal result = 21
 int test() {
-  vvll g = {{ 0, 2,  9, 10},
+  vvl g = {{ 0, 2,  9, 10},
         { 1, 0,  6,  4},
         {15, 7,  0,  8},
         { 6, 3, 12,  0}};

@@ -21,7 +21,7 @@
 //   ... // process cur
 // }
 
-bool next_comb(const vll& set, vll& cur, int n) {
+bool next_comb(const vl& set, vl& cur, int n) {
   if(cur.size() == 0) {
     cur.assign(set.begin(), set.begin() + n);
     return true;
@@ -49,7 +49,7 @@ bool next_comb(const vll& set, vll& cur, int n) {
 }
 
 // loops through combinations of all sizes, EXCEPT 0 
-bool next_comb(const vll& set, vll& cur) {
+bool next_comb(const vl& set, vl& cur) {
   if(cur.size() == 0)
     return next_comb(set, cur, 1);
   
@@ -67,8 +67,8 @@ bool next_comb(const vll& set, vll& cur) {
 
 int test() {
   ll test[] = {0, 0, 1, 1, 3, 3, 3, 4, 5, 5, 7};
-  vll set(test, test + sizeof(test)/sizeof(test[0]));
-  vll cur;
+  vl set(test, test + sizeof(test)/sizeof(test[0]));
+  vl cur;
   
   // 432 all together, including null set
   // formula for k items with multiplicity n_i:
@@ -92,7 +92,7 @@ int solve_determine_comb() {
   while(!(cin>>ws).eof()) {
     string in;
     int r;
-    vll vin, cur;
+    vl vin, cur;
 
     cin >> in >> r;
 

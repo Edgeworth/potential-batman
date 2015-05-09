@@ -8,7 +8,7 @@
 // s      : source
 // t      : sink
 // returns: max flow
-ll max_flow(vvll& cap, vvll& flow, int s, int t) {
+ll max_flow(vvl& cap, vvl& flow, int s, int t) {
   ll tot_flow = 0;
 
   // keep pushing augmenting flows
@@ -72,8 +72,8 @@ int solve_bandwidth() {
     if(n == 0)
       return 0;
 
-    vvll cap(n, vll(n, 0));
-    vvll flow(n, vll(n, 0));
+    vvl cap(n, vl(n, 0));
+    vvl flow(n, vl(n, 0));
 
     int s, t, c;
     cin >> s >> t >> c;
@@ -98,8 +98,8 @@ int solve_gopher() {
     cin >> n >> m >> s >> v;
 
     const int N = n + m + 2;
-    vvll cap(N, vll(N, 0));
-    vvll flow(N, vll(N, 0));
+    vvl cap(N, vl(N, 0));
+    vvl flow(N, vl(N, 0));
 
     vector<vec2> moles(n);
     for(int i = 0; i < n; ++i) {

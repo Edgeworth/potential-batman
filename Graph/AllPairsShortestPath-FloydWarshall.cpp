@@ -1,8 +1,5 @@
 #include "Defines.h"
 
-typedef vector<ll> vl;
-typedef vector<vl> vvl;
-
 /* START SOLUTION */
 
 // dists : adj matrix with LLONG_MAX/2 representing no edge
