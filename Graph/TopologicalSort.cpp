@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 /* START SOLUTION */
 
@@ -7,7 +7,9 @@
 // ordered: vector (which may initially be any size) 
 //          in which the topologically sorted indices
 //          are stored
-void top_sort(const vvi& g, vi& ordered) {
+// returns true iff there is a topological ordering (there
+//         are no cycles)
+bool top_sort(const vvi& g, vi& ordered) {
   ordered.resize(0);
   vi indegs(g.size());
 
@@ -31,6 +33,8 @@ void top_sort(const vvi& g, vi& ordered) {
       if(--indegs[n] == 0)
         q.push(n);
   }
+
+  return ordered.size() == g.size();
 }
 
 /* END SOLUTION */
