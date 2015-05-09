@@ -2,7 +2,6 @@
 
 ## Graph
 
-- Strongly connected components
 - Min cost perfect matching (Hungarian algorithm?)
 - Min cost max flow
 - Articulation points (ben)
