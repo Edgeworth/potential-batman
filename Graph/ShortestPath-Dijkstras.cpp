@@ -1,8 +1,4 @@
-#include "Defines.h"
-
-typedef pair<ll, int> pli;
-typedef vector<pli> vpli;
-typedef vector<vpli> vvpli;
+#include "../Defines.h"
 
 /* START SOLUTION */
 
@@ -14,7 +10,7 @@ typedef vector<vpli> vvpli;
 // start : starting node
 // returns the weight of the minimum spanning tree or -1 if 
 //         not connected
-void dijkstras(vvpli& el, vi& dads, vll& dists, int start) {
+void dijkstras(vvpli& el, vi& dads, vl& dists, int start) {
   int N = el.size();
   set<pli> pq; // weight, node
 
@@ -64,7 +60,7 @@ int main() {
 
     cout << "Case " << caze++ << ": ";
     vi dads(N, -1);
-    vll dists(N, LLONG_MAX);
+    vl dists(N, LLONG_MAX);
     dijkstras(el, dads, dists, start);
 
     stack<ll> ans;

@@ -1,7 +1,4 @@
-#include "Defines.h"
-
-typedef vector<ll> vl;
-typedef vector<vl> vvl;
+#include "../Defines.h"
 
 /* START SOLUTION */
 

@@ -3,7 +3,7 @@
 /* START SOLUTION */
 
 ll MAX_PRIME = 46342;
-vll PRIMES;
+vl PRIMES;
 vb IS_PRIME(MAX_PRIME + 1, true);
 
 // MAX_PRIME = 10^6 takes 0.2s
@@ -28,7 +28,7 @@ void run_sieve() {
 // to find prime factors of n, you need only calculate
 // primes up to sqrt(n) (as we can't have more than 1
 // prime > sqrt(n) in the prime factorisation)
-void prime_facts(ll n, vll& pfs) {
+void prime_facts(ll n, vl& pfs) {
   int p = 0;
   ll pfact = PRIMES[0];
   while(n != 1 && p < PRIMES.size() && pfact * pfact <= n) {
@@ -59,7 +59,7 @@ int solve_divisors() {
   cin >> L >> U;
   ll ma = -1, mac = -1;
   for(int c = L; c <= U; ++c) {
-    vll pfs, ns;
+    vl pfs, ns;
     prime_facts(c, pfs);
     for(int i = 0; i < pfs.size(); ++i)
     if(i == 0 || pfs[i] != pfs[i - 1]) ns.push_back(1);
@@ -91,7 +91,7 @@ int solve_prime_factors() {
 
     if(n == 0) break;
 
-    vll pfs;
+    vl pfs;
     prime_facts(abs(n), pfs);
 
     cout << n << " = ";
