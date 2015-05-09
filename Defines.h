@@ -88,9 +88,10 @@ bool gti(dbl a, dbl b, bool include) {
   }
 }
 
-// Make c++ io faster
-ios::sync_with_stdio(false);
-cin.tie(NULL);
-// dont use endl
+// make c++ io faster
+// put in main:
+// ios::sync_with_stdio(false);
+// cin.tie(NULL);
+// and don't use endl
 
 #endif

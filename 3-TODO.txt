@@ -25,7 +25,6 @@
 
 ## Data Structures
 
-- Fenwick Tree
 
 ## Maths
 

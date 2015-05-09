@@ -1,4 +1,6 @@
-#include "Defines.h"
+#include "../Defines.h"
+
+/* START SOLUTION */
 
 ll MAX_PRIME = 46342;
 vll PRIMES;
@@ -40,6 +42,8 @@ void prime_facts(ll n, vll& pfs) {
 
   if(n != 1) pfs.push_back(n);
 }
+
+/* END SOLUTION */
 
 // solves:
 // http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=230
