@@ -1,51 +1,38 @@
 #include "../Defines.h"
 
-int d = 0;
-void pd() {
-  for (int i = 0; i < d; ++i) cerr << "\t";
-}
+/* START SOLUTION */
 
 // el   : edge list
 // disc : discovered time, init with (|V|, -1)
 // low  : lowest reachable node, init with (|V|, -1)
 // dads : parents array, init with (|V|, -1)
 // aps  : list of articulation points, init empty
-// n    : current node
-// time : current time, init 0
-// returns the highest time seen
-int artic_f(vvi& el, vi& disc, vi& low, vi& dads, si& aps,
-    int n, int time) {
-  disc[n] = low[n] = (++time);
-
-  //pd(); cerr << "n = " << n << " disc = " << time << endl;
+// bs   : list of bridges, init empty
+// n    : current node, init to some unvisited node
+// time : current time, init to anything
+void artic_f(vvi& el, vi& disc, vi& low, vi& dads, si& aps,
+    spii& bs, int n, int& time) {
+  disc[n] = low[n] = ++time;
 
   int kids = 0;
   for (int k : el[n]) {
-    //pd(); cerr << "  k = " << k;
     if (disc[k] != -1) { // vis check
       if (k != dads[n]) low[n] = min(low[n], disc[k]);
-      //cerr << " vis. low[n] = " << low[n] << endl;
     } else {
-      //cerr << " not vis" << endl;
       ++kids;
       dads[k] = n;
-      //++d;
-      time = artic_f(el, disc, low, dads, aps, k, time);
-      //--d;
+      artic_f(el, disc, low, dads, aps, bs, k, time);
       low[n] = min(low[n], low[k]);
-      //pd(); cerr << "  low[n] = " << low[n] << endl;
       
-      if (dads[n] != -1 && low[k] >= disc[n]) {
-        //pd(); cerr << "  ap!" << endl;
-        aps.insert(n);
-      }
+      if (dads[n] != -1 && low[k] >= disc[n]) aps.insert(n);
+      if (low[k] > disc[n]) bs.insert({min(n,k), max(n,k)});
     }
   }
   
   if (dads[n] == -1 && kids > 1) aps.insert(n);
-
-  return time;
 } 
+
+/* END SOLUTION */
 
 // http://uva.onlinejudge.org/external/3/315.html
 void solve_network() {
@@ -69,7 +56,6 @@ void solve_network() {
         --k;
         el[n].push_back(k);
         el[k].push_back(n);
-        //cerr << n << " <-> " << k << endl;
       }
     }
 
@@ -77,13 +63,53 @@ void solve_network() {
     vi low(N, -1);
     vi dads(N, -1);
     si aps;
-    artic_f(el, disc, low, dads, aps, 0, 0);
+    spii bs;
+    int time = 0;
+    artic_f(el, disc, low, dads, aps, bs, 0, time);
 
     cout << aps.size() << endl;
 
   }
 }
 
+void solve_critical_links() {
+  while (!(cin >> ws).eof()) {
+    int N;
+    cin >> N >> ws;
+
+    vvi el(N, vi());
+    for (int i = 0; i < N; i++) {
+      int n, es;
+      char d;
+      cin >> n >> ws >> d >> es >> d;
+      for (int j = 0; j < es; j++) {
+        int k;
+        cin >> k;
+        el[n].push_back(k);
+      }
+    }
+
+    vi disc(N, -1);
+    vi low(N, -1);
+    vi dads(N, -1);
+    si aps;
+    spii bs;
+    int time = 0;
+    for (int i = 0; i < N; i++) {
+      if (disc[i] == -1) {
+        artic_f(el, disc, low, dads, aps, bs, i, time);
+      }
+    }
+
+    cout << bs.size() << " critical links" << endl;
+    for (auto& e : bs) {
+      cout << e.first << " - " << e.second << endl;
+    }
+    cout << endl;
+  }
+}
+
 int main() {
   solve_network();
+  //solve_critical_links();
 }
