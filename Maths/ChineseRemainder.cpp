@@ -59,6 +59,8 @@ ll chinese_remainder(const vl& ns, const vl& as) {
   return x;
 }
 
+/* END SOLUTION */
+
 int simple_test() {
   // x = 2 mod 3, x = 3 mod 4, x = 1 mod 5
   //   => x = 11 mod 60

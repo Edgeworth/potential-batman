@@ -33,14 +33,27 @@ void dijkstras(vvpli& el, vl& dists, vi& dads, int start) {
   }
 }
 
+// To solve a system of inequalities on xs of the form:
+//    x_j - x_i <= w_{ij}
+// construct a graph with a vertex v_i for each x_i, a
+// source node s with a 0-weight edge connected to each
+// v_i, and an edge from v_i to v_j of weight w_{ij} for
+// each constraint of the form above.
+// Run Bellman-Ford from s; if there is a negative cycle,
+// then there is no solution, otherwise assigning 
+// x_i = dists[v_i] satisfies the given constraints
+
 // O(|V|*|E|)
-// el    : an edge list of the form {weight, to}
-// dists : init with (|V|, LLONG_MAX/2)
-// dads  : init with (|V|, -1)
-void bellman_ford(vvpli& el, vl& dists, vi& dads, int s) {
+// el     : an edge list of the form {weight, to}
+// dists  : init with (|V|, LLONG_MAX/2)
+// dads   : init with (|V|, -1)
+// returns: true iff there are no neg cycles in the graph
+bool bellman_ford(vvpli& el, vl& dists, vi& dads, int s) {
   int N = el.size();
   dists[s] = 0;
-  for (int k = 0; k < N; k++) {
+
+  // do path calculations
+  for (int k = 0; k < N - 1; k++) {
     for (int i = 0; i < N; i++) {
       for (auto& e : el[i]) {
         ll w = e.first;
@@ -52,6 +65,17 @@ void bellman_ford(vvpli& el, vl& dists, vi& dads, int s) {
       }
     }
   }
+
+  // check for negative cycle
+  for (int i = 0; i < N; i++) {
+    for (auto& e : el[i]) {
+      ll w = e.first;
+      int j = e.second;
+      if (dists[i] + w < dists[j]) return false;
+    }
+  }
+
+  return true;
 }
 
 /* END SOLUTION */
