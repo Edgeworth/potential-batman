@@ -44,6 +44,8 @@ typedef vector<pii> vpii;
 typedef vector<vpii> vvpii;
 typedef vector<tiii> vtiii;
 
+typedef set<int> si;
+
 typedef ostringstream oss;
 typedef istringstream iss;
 
