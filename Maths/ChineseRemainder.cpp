@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 // do not use for neg values
 tuple<ll, ll> xgcd_pos(ll a, ll b) {
@@ -40,7 +40,7 @@ tuple<ll, ll> xgcd(ll a, ll b) {
 // and x + k * lcm(n1, n2, ...) is a soln for any
 // integer k
 // we do not handle the non-coprime case
-ll chinese_remainder(const vll& ns, const vll& as) {
+ll chinese_remainder(const vl& ns, const vl& as) {
   ll x = 0;
   ll N = 1;
   for(ll n : ns) N *= n;

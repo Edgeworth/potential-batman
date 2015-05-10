@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 /* START SOLUTION */
 
@@ -10,8 +10,8 @@
 // subproblem: how many ways of making v using coins of
 // value c or less?
 // recurrence: every way either uses coin c or does not
-ll coin_change(const vll& coins, ll val) {
-    vvll dp(val + 1, vll(coins.size(), 0));
+ll coin_change(const vl& coins, ll val) {
+    vvl dp(val + 1, vl(coins.size(), 0));
     
     for(int c = 0; c < coins.size(); ++c)
         dp[0][c] = 1;
@@ -34,7 +34,7 @@ ll coin_change(const vll& coins, ll val) {
 // times out, but probably due to broken uva servers
 // correctly solves all input given in help thread http://online-judge.uva.es/board/viewtopic.php?f=7&t=2533
 int solve1() {
-    vll coins = {1, 5, 10, 25, 50};
+    vl coins = {1, 5, 10, 25, 50};
     while(!(cin>>ws).eof()) {
         int val;
         cin >> val;

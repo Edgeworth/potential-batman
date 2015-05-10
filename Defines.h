@@ -24,9 +24,10 @@ typedef ld dbl;
 typedef tuple<dbl, dbl> vec2;
 typedef tuple<int, int, int> tiii;
 typedef pair<int, int> pii;
+typedef pair<ll, int> pli;
 
-typedef vector<ll> vll;
-typedef vector<vll> vvll;
+typedef vector<ll> vl;
+typedef vector<vl> vvl;
 
 typedef vector<dbl> vd;
 typedef vector<vd> vvd;
@@ -43,6 +44,9 @@ typedef vector<vs> vvs;
 typedef vector<pii> vpii;
 typedef vector<vpii> vvpii;
 typedef vector<tiii> vtiii;
+typedef vector<pli> vpli;
+typedef vector<vpli> vvpli;
+
 
 typedef set<int> si;
 typedef set<pii> spii;
@@ -53,7 +57,6 @@ typedef istringstream iss;
 #define _ ignore
 
 // used for comp geom and some maths
-
 const dbl EP = 1e-7;
 
 bool equ(dbl a, dbl b) {
@@ -91,4 +94,11 @@ bool gti(dbl a, dbl b, bool include) {
     return gt(a, b);
   }
 }
+
+// make c++ io faster
+// put in main:
+// ios::sync_with_stdio(false);
+// cin.tie(NULL);
+// and don't use endl
+
 #endif

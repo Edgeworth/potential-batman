@@ -1,9 +1,5 @@
 #include "../Defines.h"
 
-typedef pair<ll, int> pli;
-typedef vector<pli> vpli;
-typedef vector<vpli> vvpli;
-
 /* START SOLUTION */
 
 // O(|V|^2)
@@ -15,7 +11,7 @@ typedef vector<vpli> vvpli;
 // start : starting node
 // returns the weight of the minimum spanning tree or -1 if 
 //         not connected
-void dijkstras(vvpli& el, vll& dists, vi& dads, int start) {
+void dijkstras(vvpli& el, vl& dists, vi& dads, int start) {
   set<pli> pq; // weight, node
 
   dists[start] = 0;
@@ -41,7 +37,7 @@ void dijkstras(vvpli& el, vll& dists, vi& dads, int start) {
 // el    : an edge list of the form {weight, to}
 // dists : init with (|V|, LLONG_MAX/2)
 // dads  : init with (|V|, -1)
-void bellman_ford(vvpli& el, vll& dists, vi& dads, int s) {
+void bellman_ford(vvpli& el, vl& dists, vi& dads, int s) {
   int N = el.size();
   dists[s] = 0;
   for (int k = 0; k < N; k++) {
@@ -85,8 +81,19 @@ int main() {
 
     cout << "Case " << caze++ << ": ";
     vi dads(N, -1);
-    vll dists(N, LLONG_MAX/2);
+    vl dists(N, LLONG_MAX/2);
     bellman_ford(el, dists, dads, start);
+
+    vi dads2(N, -1);
+    vl dists2(N, LLONG_MAX/2);
+    dijkstras(el, dists2, dads2, start);
+
+    int zero = N-N;
+    for (int i = 0; i < N; i++) {
+      if (dists[i] != dists2[i])
+        cerr << (1/zero);
+    }
+
 
     stack<ll> ans;
     int n = end;

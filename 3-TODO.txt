@@ -2,14 +2,12 @@
 
 ## Graph
 
-- Strongly connected components
 - Min cost perfect matching (Hungarian algorithm?)
 - Min cost max flow
 - Articulation points (ben)
 - Blossom algorithm :(
 - K shortest paths / loops
 - Knights tour divide and conquer
-- Bi-Colouring
 - Chromatic Number
 
 ## DP
@@ -23,28 +21,15 @@
 - KMP string matching
 
 ## Data Structures
-
-- Fenwick Tree
+- Range Tree
 
 ## Maths
 
 - 2SAT
-- Prime generating/checking
-  - Rho algorithm?
-- Kirchhoff's theorem
-- Number lists/formulas
-  - Carmichael numbers (43 numbers <= 10^6)
-  - Catalan numbers
-  - TODO: add more
-- Fibonnaci with matrices
-- Binomial coefficients (esp. properties mod prime)
+- Kirchhoff's theorem :(
 - Polya counting (?? hopefully not)
-- Gaussian elimination
 - Great circle distance
-- Fast matrix multiplication / power (?)
-- Brent's cycle detection algorithm
 - Systems of inequalities with Bellman-Ford
-- Euler's totient function
 
 ## Comp Geom
 

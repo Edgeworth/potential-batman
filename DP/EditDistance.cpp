@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 /* START SOLUTION */
 
@@ -14,7 +14,7 @@ enum { REP = 0, ADD, REM };
 //          length j prefix of v
 // returns: the edit distance between u and v
 int edit_distance(const string u, const string v, vvi& ts) {
-  vvll dp(u.size() + 1, vll(v.size() + 1, LLONG_MAX)); 
+  vvl dp(u.size() + 1, vl(v.size() + 1, LLONG_MAX)); 
   for(int j = 0; j <= v.size(); ++j) {
     dp[0][j] = j;
     ts[0][j] = ADD;

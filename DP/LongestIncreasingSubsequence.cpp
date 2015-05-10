@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 /* START SOLUTION */
 
@@ -13,7 +13,7 @@
 //          index
 // returns: the length of the lis in in
 
-int lis(const vll& in, vi& liss, vi& parents) {
+int lis(const vl& in, vi& liss, vi& parents) {
   // position j gives index of the last element in "best"
   // known lis of length j (where best means ends in
   // smallest element)
@@ -54,7 +54,7 @@ int lis(const vll& in, vi& liss, vi& parents) {
 }
 
 // print lis ending at position index
-void print_lis(const vll& in, const vi& parents, int index) {
+void print_lis(const vl& in, const vi& parents, int index) {
   vi idx_seq;
   for(int i = index; i >= 0; i = parents[i])
     idx_seq.push_back(i);
@@ -72,7 +72,7 @@ int solve_wavio() {
     int N;
     cin >> N;
 
-    vll in(N), rin(N);
+    vl in(N), rin(N);
     for(int n = 0; n < N; ++n) {
       cin >> in[n];
       rin[N-1-n] = in[n];
