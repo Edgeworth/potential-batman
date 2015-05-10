@@ -48,6 +48,9 @@ typedef vector<pli> vpli;
 typedef vector<vpli> vvpli;
 
 
+typedef set<int> si;
+typedef set<pii> spii;
+
 typedef ostringstream oss;
 typedef istringstream iss;
 
