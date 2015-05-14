@@ -33,7 +33,7 @@ struct line2d {
   v2d a, b;
 
   bool operator==(const line2d& o) const {
-    return equ(a, o.a) && equ(b, o.b);
+    return a == o.a && b == o.b;
   }
   bool operator!=(const line2d& o) const {
     return !(*this == o);
@@ -58,11 +58,11 @@ v2d normalise2d(const v2d& v) {
   return v / mag2d(v);
 }
 
-v2d cross2d(const v2d& a, const v2d& b) {
+dbl cross2d(const v2d& a, const v2d& b) {
   return a.x * b.y - a.y * b.x;
 }
 
-v2d cross_at2d(const v2d& o, const v2d& a, const v2d& b) {
+dbl cross_at2d(const v2d& o, const v2d& a, const v2d& b) {
   return cross2d(a - o, b - o);
 }
 
@@ -73,20 +73,20 @@ bool is_strictly_left_of(const v2d& p, const line2d& l) {
 
 // Strict.
 bool is_strictly_right_of(const v2d& p, const line2d& l) {
-  return le(cross_at2d(l.a, l.b, p), 0.0);
+  return lt(cross_at2d(l.a, l.b, p), 0.0);
 }
 
-v2d dot2d(const v2d& a, const v2d& b) {
+dbl dot2d(const v2d& a, const v2d& b) {
   return a.x * b.x + a.y * b.y;
 }
 
-v2d normal_of2d(const v2d& v) {
+v2d perp2d(const v2d& v) {
   return {-v.y, v.x};
 }
 
 v2d reflect2d(const v2d& r, const v2d& n) {
   v2d normn = normalise2d(n);
-  return dot2d(normn, r) * 2.0 - r;
+  return normn * dot2d(normn, r) * 2.0 - r;
 }
 
 // REQUIRES NON-ZERO LENGTH LINE.
@@ -112,10 +112,11 @@ bool point_on_line_segment2d(
   dbl l_maxy = max(l.a.y, l.b.y);
   // To not include endpoints, remove eq's.
   if (!point_on_line_inf2d(p, l)) return false;
-  return gti(p.x, l_minx, include) &&
-         lti(p.x, l_maxx, include) &&
-         gti(p.y, l_miny, include) &&
-         lti(p.y, l_miny, include);
+  if (p == l.a || p == l.b) return include;
+  return gteq(p.x, l_minx) &&
+         lteq(p.x, l_maxx) &&
+         gteq(p.y, l_miny) &&
+         lteq(p.y, l_maxy);
 }
 
 // In the case of infinite intersections, aprop, bprop and
@@ -123,48 +124,55 @@ bool point_on_line_segment2d(
 // direction and the first point of intersection being the
 // first point on |a|.
 bool inter2d(
-    const line2d& a, const line2d& b, bool include,
+    const line2d& A, const line2d& B, bool include,
     dbl& aprop, dbl& bprop,
     line2d& inter_line, bool& infinite) {
-  if ((a.a == b.a && a.b == b.b) || 
-      (a.a == b.b && a.b == b.a)) {
-    inter_line = a;
+  if ((A.a == B.a && A.b == B.b) || 
+      (A.a == B.b && A.b == B.a)) {
+    inter_line = A;
     aprop = 0.0;
-    bprop = prop_along_line2d(a.a, b);
-    infinite = !(l.a == l.b);
+    bprop = prop_along_line2d(A.a, B);
+    infinite = !(A.a == A.b);
     return true;
   }
-  dbl a = b.a.x - a.a.x;
-  dbl b = b.b.x - b.a.x;
-  dbl c = a.b.x - a.a.x;
-  dbl d = b.a.y - a.a.y;
-  dbl e = b.b.y - b.a.y;
-  dbl f = a.b.y - a.a.y;
+  dbl a = B.a.x - A.a.x;
+  dbl b = B.b.x - B.a.x;
+  dbl c = A.b.x - A.a.x;
+  dbl d = B.a.y - A.a.y;
+  dbl e = B.b.y - B.a.y;
+  dbl f = A.b.y - A.a.y;
   dbl bfce = b * f - c * e;
-  
+
   if (equ(bfce, 0.0)) {
     vector<pair<dbl, v2d>> points;
-    if (point_on_line_segment2d(a.a, b, include)) {
-      points.emplace_back(0.0, a.a);
+    if (point_on_line_segment2d(A.a, B, true)) {
+      points.emplace_back(0.0, A.a);
     }
-    if (point_on_line_segment2d(a.b, b, include)) {
-      points.emplace_back(1.0, a.a);
+    if (point_on_line_segment2d(A.b, B, true)) {
+      points.emplace_back(1.0, A.b);
     }
-    if (point_on_line_segment2d(b.a, a, include)) {
-      points.emplace_back(prop_along_line2d(b.a, a), a.a);
+    if (point_on_line_segment2d(B.a, A, true)) {
+      points.emplace_back(prop_along_line2d(B.a, A), B.a);
     }
-    if (point_on_line_segment2d(b.b, a, include)) {
-      points.emplace_back(prop_along_line2d(b.b, a), a.a);
+    if (point_on_line_segment2d(B.b, A, true)) {
+      points.emplace_back(prop_along_line2d(B.b, A), B.b);
     }
     sort(points.begin(), points.end());
 
-    if (inter_line.size() == 0) {
+    if (points.size() == 0) {
       return false;
     } else {
-      inter_line = {points.front(), points.back()};
-      infinite = inter_line.a != inter_line.b;
-      aprop = prop_along_line2d(inter_line.a, a);
-      bprop = prop_along_line2d(inter_line.a, b);
+      inter_line = {points.front().second, points.back().second};
+    if (inter_line.a == inter_line.b) {
+      infinite = false;
+      if (!include) {
+        return false;
+      }
+    } else {
+      infinite = true;
+    }
+      aprop = prop_along_line2d(inter_line.a, A);
+      bprop = prop_along_line2d(inter_line.a, B);
       return true;
     }
   }
@@ -172,10 +180,10 @@ bool inter2d(
   infinite = false;
   aprop = (b * d - a * e) / bfce;
   bprop = (c * d - a * f) / bfce;
-  v2d inter_point = a.a + (a.b - a.a) * aprop;
+  v2d inter_point = A.a + (A.b - A.a) * aprop;
   inter_line = {inter_point, inter_point};
-  return gti(aprop, 0.0) && lti(aprop, 1.0) &&
-         gti(bprop, 0.0) && lti(bprop, 1.0);
+  return gti(aprop, 0.0, include) && lti(aprop, 1.0, include) &&
+         gti(bprop, 0.0, include) && lti(bprop, 1.0, include);
 }
 
 bool colinear2d(const v2d& a, const v2d& b, const v2d& c) {
@@ -195,10 +203,10 @@ bool convex2dcomp(const v2d& a, const v2d& b) {
 
 // Produces CCW points not including the last point.
 // CHECK RETURN VALUE FOR >= 3 POINTS
-poly2d convex2d(const vector<v2d>& pts) {
+poly2d convex2d(vector<v2d> pts) {
   int min_i = 0;
   for (int i = 1; i < pts.size(); ++i) {
-    if (lt(pts[i].x, pts[min_i]) ||
+    if (lt(pts[i].x, pts[min_i].x) ||
         (equ(pts[i].x, pts[min_i].x) &&
          lt(pts[i].y, pts[min_i].y))) {
       min_i = i;
@@ -207,14 +215,15 @@ poly2d convex2d(const vector<v2d>& pts) {
   swap(pts[min_i], pts.back());
   c2dref = pts.back();
   pts.pop_back();
-  sort(pts.begin(), pts.end());
+  sort(pts.begin(), pts.end(), convex2dcomp);
+  pts.push_back(c2dref);
   vector<v2d> convex = {c2dref, pts[0]};
   for (int i = 1; i < pts.size(); ++i) {
     while (convex.size() >= 3) {
       v2d& top = convex[convex.size() - 1];
       v2d& mid = convex[convex.size() - 2];
       v2d& st = convex[convex.size() - 3];
-      if (!is_strictly_left_of(st, {mid, top})) {
+      if (!is_strictly_left_of(top, {st, mid})) {
         swap(mid, top);
         convex.pop_back();
       } else {
@@ -223,6 +232,7 @@ poly2d convex2d(const vector<v2d>& pts) {
     }
     convex.push_back(pts[i]);
   }
+  if (convex.back() == c2dref) convex.pop_back();
   return convex;
 }
 
@@ -238,7 +248,7 @@ bool point_in_poly2d(const v2d& v, const poly2d& poly) {
         is_strictly_left_of(v, {a, b})) {
       wn++;
     } else if (a.y >= v.y && b.y < v.y &&
-        is_strictly_right_of(v, {a, b)) {
+        is_strictly_right_of(v, {a, b})) {
       wn--;
     }
   }
@@ -248,19 +258,21 @@ bool point_in_poly2d(const v2d& v, const poly2d& poly) {
 
 // RETURNS INDICIES
 pair<int, int> closest_two_points2d(const vector<v2d>& pts) {
+  return {-1, -1};
 }
 
 // BENTLEY-OTTMANN
 vector<v2d> all_inter_points2d(const vector<line2d>& lines) {
+  return {{-1, -1}};
 }
 
 dbl area2d(const poly2d& poly) {
   if (poly.size() == 0) return 0.0;
   dbl area = 0.0;
   for (int i = 1; i < poly.size(); ++i) {
-    v2d& a = poly[i];
-    v2d& b = poly[(i + 1) % poly.size()];
-    area += cross2d(poly[0], a, b);
+    const v2d& a = poly[i];
+    const v2d& b = poly[(i + 1) % poly.size()];
+    area += cross_at2d(poly[0], a, b);
   }
   return area / 2.0;
 }
@@ -271,8 +283,8 @@ v2d centroid2d(const poly2d& poly) {
   dbl y = 0.0;
   dbl area = area2d(poly);
   for (int i = 0; i < poly.size(); ++i) {
-    v2d& a = poly[i];
-    v2d& b = poly[(i + 1) % poly.size()];
+    const v2d& a = poly[i];
+    const v2d& b = poly[(i + 1) % poly.size()];
     dbl cross = cross2d(a, b);
     x += (a.x + b.x) * cross;
     y += (a.y + b.y) * cross;
@@ -284,18 +296,18 @@ v2d centroid2d(const poly2d& poly) {
 // REQUIRES NON-ZERO LENGTH LINE.
 v2d project_point_onto_line2d(const v2d& p, const line2d& l) {
   v2d AP = l.a - p;
-  b2d AB = l.b - l.a;
+  v2d AB = l.b - l.a;
   return l.a + AB * dot2d(AP, AB) / dot2d(AB, AB);
 }
 
 dbl dist_to_inf_line2d(const v2d& p, const line2d& l) {
   v2d projected = project_point_onto_line2d(p, l);
-  return dist2d(projected, v2d);
+  return dist2d(projected, p);
 }
 
 dbl dist_to_line_segment_2d(const v2d& p, const line2d& l) {
   v2d projected = project_point_onto_line2d(p, l);
-  if (point_on_line_segment_2d(projected, l)) {
+  if (point_on_line_segment2d(projected, l, true)) {
     return dist2d(projected, p);
   }
 
@@ -321,10 +333,10 @@ struct v3d {
   bool operator==(const v3d& o) const {
     return equ(x, o.x) && equ(y, o.y) && equ(z, o.z);
   }
-  bool operator!=(const v2d& o) const {
+  bool operator!=(const v3d& o) const {
     return !(*this == o);
   }
-  bool operator<(const v2d& o) const {
+  bool operator<(const v3d& o) const {
     if (x != o.x) return x < o.x;
     if (y != o.y) return y < o.y;
     return z < o.z;
@@ -335,7 +347,7 @@ struct line3d {
   v3d a, b;
 
   bool operator==(const line3d& o) const {
-    return equ(a, o.a) && equ(b, o.b);
+    return a == o.a && b == o.b;
   }
   bool operator!=(const line3d& o) const {
     return !(*this == o);
@@ -363,7 +375,7 @@ v3d cross3d(const v3d& a, const v3d& b) {
   dbl x = a.y * b.z - a.z * b.y;
   dbl y = a.z * b.x - a.x * b.z;
   dbl z = a.x * b.y - a.y * b.x;
-  return {x, y, y};
+  return {x, y, z};
 }
 
 v3d cross_at3d(const v3d& o, const v3d& a, const v3d& b) {
@@ -379,34 +391,35 @@ v3d normal_of3d(const v3d& a, const v3d& b) {
 }
 
 v3d reflect3d(const v3d& r, const v3d& n) {
-  return dot3d(r, n) * 2.0 - r;
+  v3d normn = normalise3d(n);
+  return normn * dot3d(r, normn) * 2.0 - r;
 }
 
 /* END SOLUTION */
 #include <cstdio>
 
 void print_v2d(const v2d& v) {
-  printf("(%.3f, %.3f)", v.x, v.y);
+  printf("(%.3Lf, %.3Lf)", v.x, v.y);
 }
 
 void print_line2d(const line2d& v) {
   printf("{");
-  print_v2d(l.a);
+  print_v2d(v.a);
   printf(", ");
-  print_v2d(l.b);
+  print_v2d(v.b);
   printf("}");
 }
 
-void assert_equal(const dbl& expected, const dbl& actual) {
-  if (expected != actual) {
-    printf("Expected: %.3f\nGot: %.3f\n", expected, actual);
+void assert_equal_int(const dbl& expected, const dbl& actual) {
+  if (!equ(expected, actual)) {
+    printf("ASSERTION:\nExpected: %.3Lf\nGot: %.3Lf\n", expected, actual);
     exit(1);
   }
 }
 
-void assert_equal(const v2d& expected, const v2d& actual) {
+void assert_equal_int(const v2d& expected, const v2d& actual) {
   if (expected != actual) {
-    printf("Expected: ");
+    printf("ASSERTION:\nExpected: ");
     print_v2d(expected);
     printf("\nGot: ");
     print_v2d(actual);
@@ -415,9 +428,9 @@ void assert_equal(const v2d& expected, const v2d& actual) {
   }
 }
 
-void assert_equal(const line2d& expected, const line2d& actual) {
+void assert_equal_int(const line2d& expected, const line2d& actual) {
   if (expected != actual) {
-    printf("Expected: ");
+    printf("ASSERTION:\nExpected: ");
     print_line2d(expected);
     printf("\nGot: ");
     print_line2d(actual);
@@ -425,6 +438,31 @@ void assert_equal(const line2d& expected, const line2d& actual) {
     exit(1);
   }
 }
+
+void assert_equal_int(const poly2d& expected, const poly2d& actual) {
+  if (expected.size() != actual.size()) goto fail;
+  for (int i = 0; i < expected.size(); ++i) {
+    if (expected[i] != actual[i]) goto fail;
+  }
+  return;
+
+fail:
+  printf("ASSERTION\nExpected: ");
+  for (auto i : expected) {
+    print_v2d(i);
+    printf(" ");
+  }
+  printf("\nActual: ");
+  for (auto i : actual) {
+    print_v2d(i);
+    printf(" ");
+  }
+  printf("\n");
+}
+
+#define assert ASSERT
+#define assert_equal(A, B) printf("LINE: %d -- assert_equal(%s, %s)\n", __LINE__, #A, #B); assert_equal_int(A, B);
+#include <cassert>
 
 void test() {
   // dbl mag2d(const v2d& v);
@@ -437,8 +475,8 @@ void test() {
   assert_equal(sqrt(2), dist2d({2, 2}, {1, 1}));
 
   // v2d normalise2d(const v2d& v);
-  assert_equal({1 / sqrt(2), 1 / sqrt(2)}, normalise2d({100, 100}));
-  assert_equal({1, 0}, normalise2d({100, 0}));
+  assert_equal((v2d{1 / sqrt(2), 1 / sqrt(2)}), normalise2d({100, 100}));
+  assert_equal((v2d{1, 0}), normalise2d({100, 0}));
   
   // v2d cross2d(const v2d& a, const v2d& b);
   assert_equal(-25.548, cross2d({1.32, 5.32}, {5.1, 1.2}));
@@ -452,19 +490,19 @@ void test() {
   // bool is_strictly_right_of(const v2d& p, const line2d& l);
   assert(is_strictly_left_of({3, 3}, {{1, 1}, {4, 3}}));
   assert(!is_strictly_right_of({3, 3}, {{1, 1}, {4, 3}}));
-  assert(!is_strictly_left_of({3, 2}, {{1, 1}, {4, 3}}));
-  assert(!is_strictly_right_of({3, 2}, {{1, 1}, {4, 3}}));
+  assert(!is_strictly_left_of({2.5, 2}, {{1, 1}, {4, 3}}));
+  assert(!is_strictly_right_of({2.5, 2}, {{1, 1}, {4, 3}}));
   
   // v2d dot2d(const v2d& a, const v2d& b);
   assert_equal(13.116, dot2d({5.1, 1.2}, {1.32, 5.32}));
 
   // v2d normal_of2d(const v2d& v);
-  assert_equal({}, normal_of2d({1.32, 5.32}));
+  assert_equal((v2d{-5.32, 1.32}), perp2d({1.32, 5.32}));
 
   // v2d reflect2d(const v2d& r, const v2d& n);
-  assert_equal({0, 3}, reflect2d({3, 0}, {1, 1}));
-  assert_equal({3, 0}, reflect2d({0, 3}, {1, 1}));
-  assert_equal({1, 1}, reflect2d({0, 1}, {-1, 1}));
+  assert_equal((v2d{0, 3}), reflect2d({3, 0}, {1, 1}));
+  assert_equal((v2d{3, 0}), reflect2d({0, 3}, {1, 1}));
+  assert_equal((v2d{1, 1}), reflect2d({-1, 1}, {0, 1}));
 
   // dbl prop_along_line2d(const v2d& p, const line2d& l);
   assert_equal(0.0, prop_along_line2d({1, 1}, {{1, 1}, {3, 44}}));
@@ -511,14 +549,196 @@ void test() {
 
   // bool inter2d(const line2d& a, const line2d& b, bool include,
   //              dbl& aprop, dbl& bprop, line2d& inter_line, bool& infinite);
+  dbl aprop;
+  dbl bprop;
+  line2d inter_line;
+  bool infinite;
+
+  line2d A = {{1, 3}, {3, 2}};
+  line2d B = {{1, 1}, {2, 3}};
+  line2d C = {{1, 1}, {3, 1}};
+  line2d C2 = {{1, 1}, {1, 3}};
+  line2d D = {{3, 3}, {1, 3}};
+  line2d D2 = {{3, 3}, {3, 1}};
+  line2d E = {{3, 1}, {5, 1}};
+  line2d E2 = {{1, 3}, {1, 5}};
+  line2d F = {{2, 1}, {4, 1}};
+  line2d F2 = {{1, 2}, {1, 4}};
+  line2d F3 = {{4, 1}, {2, 1}};
+  line2d G = {{1, 2}, {3, 1}};
+  line2d H = {{2, 1}, {3, 1}};
+  line2d H2 = {{1, 2}, {1, 3}};
+  line2d I = {{4, 1}, {5, 1}};
+  line2d I2 = {{1, 4}, {1, 5}};
+  line2d J = {{2, 1}, {2, 4}};
+  line2d J2 = {{2, 2.5}, {2, 4}};
+  line2d K = {{3, 1}, {3, 4}};
+
+  assert(inter2d(A, B, true, aprop, bprop, inter_line, infinite));
+  assert(!infinite);
+  assert_equal(aprop, 0.4);
+  assert_equal(bprop, 0.8);
+  assert_equal(inter_line.a, (v2d{1.8, 2.6}));
+  assert_equal(inter_line.b, (v2d{1.8, 2.6}));
+
+  assert(inter2d(A, B, false, aprop, bprop, inter_line, infinite));
+  assert(!infinite);
+  assert_equal(aprop, 0.4);
+  assert_equal(bprop, 0.8);
+  assert_equal(inter_line.a, (v2d{1.8, 2.6}));
+  assert_equal(inter_line.b, (v2d{1.8, 2.6}));
+
+  assert(!inter2d(A, G, true, aprop, bprop, inter_line, infinite));
+  assert(!inter2d(A, G, false, aprop, bprop, inter_line, infinite));
+
+  assert(inter2d(C, E, true, aprop, bprop, inter_line, infinite));
+  assert(!infinite);
+  assert_equal(aprop, 1);
+  assert_equal(bprop, 0);
+  assert_equal(inter_line.a, C.b);
+  assert_equal(inter_line.b, C.b);
+  assert(!inter2d(C, E, false, aprop, bprop, inter_line, infinite));
+
+  assert(inter2d(C, H, true, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, H.a);
+  assert_equal(inter_line.b, H.b);
+
+  assert(inter2d(C, H, false, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, H.a);
+  assert_equal(inter_line.b, H.b);
+
+  assert(inter2d(C, F, true, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, F.a);
+  assert_equal(inter_line.b, C.b);
+
+  assert(inter2d(C, F, false, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, F.a);
+  assert_equal(inter_line.b, C.b);
+
+  assert(inter2d(C, F3, true, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 1.0);
+  assert_equal(inter_line.a, F3.b);
+  assert_equal(inter_line.b, C.b);
+
+  assert(inter2d(C, F3, false, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 1.0);
+  assert_equal(inter_line.a, F3.b);
+  assert_equal(inter_line.b, C.b);
+
+  assert(!inter2d(C, I, true, aprop, bprop, inter_line, infinite));
+  assert(!inter2d(C, I, false, aprop, bprop, inter_line, infinite));
+
+  assert(!inter2d(C, D, true, aprop, bprop, inter_line, infinite));
+  assert(!inter2d(C, D, false, aprop, bprop, inter_line, infinite));
+
+  assert(inter2d(C2, E2, true, aprop, bprop, inter_line, infinite));
+  assert(!infinite);
+  assert_equal(aprop, 1);
+  assert_equal(bprop, 0);
+  assert_equal(inter_line.a, C2.b);
+  assert_equal(inter_line.b, C2.b);
+  assert(!inter2d(C2, E2, false, aprop, bprop, inter_line, infinite));
+
+  assert(inter2d(C2, H2, true, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, H2.a);
+  assert_equal(inter_line.b, H2.b);
+
+  assert(inter2d(C2, H2, false, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, H2.a);
+  assert_equal(inter_line.b, H2.b);
+
+  assert(inter2d(C2, F2, true, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, F2.a);
+  assert_equal(inter_line.b, C2.b);
+
+  assert(inter2d(C2, F2, false, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, F2.a);
+  assert_equal(inter_line.b, C2.b);
+
+  assert(!inter2d(C2, I2, true, aprop, bprop, inter_line, infinite));
+  assert(!inter2d(C2, I2, false, aprop, bprop, inter_line, infinite));
+
+  assert(!inter2d(C2, D2, true, aprop, bprop, inter_line, infinite));
+  assert(!inter2d(C2, D2, false, aprop, bprop, inter_line, infinite));
+
+  assert(inter2d(A, A, true, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.0);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, A.a);
+  assert_equal(inter_line.b, A.b);
+
+  assert(inter2d(A, A, false, aprop, bprop, inter_line, infinite));
+  assert(infinite);
+  assert_equal(aprop, 0.0);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, A.a);
+  assert_equal(inter_line.b, A.b);
+
+  assert(inter2d(C, J, true, aprop, bprop, inter_line, infinite));
+  assert(!infinite);
+  assert_equal(aprop, 0.5);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, J.a);
+  assert_equal(inter_line.b, J.a);
+
+  assert(!inter2d(C, J, false, aprop, bprop, inter_line, infinite));
+
+  assert(inter2d(C, K, true, aprop, bprop, inter_line, infinite));
+  assert(!infinite);
+  assert_equal(aprop, 1.0);
+  assert_equal(bprop, 0.0);
+  assert_equal(inter_line.a, K.a);
+  assert_equal(inter_line.b, K.a);
+
+  assert(!inter2d(C, K, false, aprop, bprop, inter_line, infinite));
+
+  assert(!inter2d(C, J2, true, aprop, bprop, inter_line, infinite));
+  assert(!inter2d(C, J2, false, aprop, bprop, inter_line, infinite));
 
   // bool colinear2d(const v2d& a, const v2d& b, const v2d& c);
-
-  // bool convex2dcomp(const v2d& a, const v2d& b);
+  assert(colinear2d({0, 0}, {1, 1}, {2, 2}));
+  assert(colinear2d({0, 0}, {2, 2}, {1, 1}));
+  assert(!colinear2d({0, 0}, {2, 3}, {1, 1}));
 
   // poly2d convex2d(const vector<v2d>& pts);
+  vector<v2d> p1 = {{0, 0}, {1, 0}, {2, 0}, {-1, 0}, {-2, 0}, 
+    {0, 1}, {0, 2}, {0, -1}, {0, -2}, {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
+  vector<v2d> p2 = {{0, 0}, {1, 0}, {1, 1}};
+  assert_equal((poly2d{{-2, 0}, {0, -2}, {2, 0}, {0, 2}}), convex2d(p1));
+  assert_equal(p2, convex2d(p2));
+
 
   // bool point_in_poly2d(const v2d& v, const poly2d& poly);
+
 
   // pair<int, int> closest_two_points2d(const vector<v2d>& pts);
 
@@ -532,4 +752,8 @@ void test() {
 
   // dbl dist_to_line_segment_2d(const v2d& p, const line2d& l);
 
+}
+
+int main() {
+  test();
 }
