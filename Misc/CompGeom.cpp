@@ -386,7 +386,7 @@ dbl dot3d(const v3d& a, const v3d& b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-v3d normal_of3d(const v3d& a, const v3d& b) {
+v3d perp3d(const v3d& a, const v3d& b) {
   return normalise3d(cross3d(a, b));
 }
 
@@ -733,6 +733,8 @@ void test() {
   vector<v2d> p1 = {{0, 0}, {1, 0}, {2, 0}, {-1, 0}, {-2, 0}, 
     {0, 1}, {0, 2}, {0, -1}, {0, -2}, {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
   vector<v2d> p2 = {{0, 0}, {1, 0}, {1, 1}};
+  vector<v2d> p3 = {{0, 0}, {1, 1}};
+  vector<v2d> p4 = {{0, 0}, {1, 1}, {2, 2}};
   assert_equal((poly2d{{-2, 0}, {0, -2}, {2, 0}, {0, 2}}), convex2d(p1));
   assert_equal(p2, convex2d(p2));
 
@@ -752,6 +754,21 @@ void test() {
 
   // dbl dist_to_line_segment_2d(const v2d& p, const line2d& l);
 
+  // dbl mag3d(const v3d& v);
+   
+  // dbl dist3d(const v3d& a, const v3d& b);
+   
+  // v3d normalise3d(const v3d& v);
+   
+  // v3d cross3d(const v3d& a, const v3d& b);
+   
+  // v3d cross_at3d(const v3d& o, const v3d& a, const v3d& b);
+   
+  // dbl dot3d(const v3d& a, const v3d& b);
+   
+  // v3d perp3d(const v3d& a, const v3d& b);
+   
+  // v3d reflect3d(const v3d& r, const v3d& n);
 }
 
 int main() {
