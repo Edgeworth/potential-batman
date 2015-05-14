@@ -1,7 +1,7 @@
-Dinic's Algorithm
+MaxFlow-Dinic's
 O(V^2 E)
 
 Optimises Edmonds-Karp by pushing flow through all shortest
 paths in one `O(VE)` sweep. Runs in
-`O(min(V^{2/3}, E^{1/2})E)` time on unit flow graphs and
+`O(min(V^{2/3}, E^{1/2}) E)` time on unit flow graphs and
 `O(V^{1/2} E)` on bipartite graphs.
