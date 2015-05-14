@@ -3,6 +3,8 @@
 
 /* START SOLUTION */
 
+#define DBG(x) cerr << #x" = " << x << endl
+
 #include<iostream>
 #include<iomanip>
 #include<sstream>
