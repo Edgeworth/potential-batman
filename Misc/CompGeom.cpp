@@ -735,14 +735,16 @@ void test() {
   vector<v2d> p2 = {{0, 0}, {1, 0}, {1, 1}};
   vector<v2d> p3 = {{0, 0}, {1, 1}};
   vector<v2d> p4 = {{0, 0}, {1, 1}, {2, 2}};
+  vector<v2d> p4 = {{0, 0}, {1, 1}, {0, 2}, {2, 2}};
+  vector<v2d> p5 = {{-2. -2}, {-1, -1}, {0, 0}, {1, 1}, {2, 2}};
   assert_equal((poly2d{{-2, 0}, {0, -2}, {2, 0}, {0, 2}}), convex2d(p1));
   assert_equal(p2, convex2d(p2));
+  assert_equal(p3, convex2d(p3));
+  assert_equal(p4, convex2d(p4));
 
 
   // bool point_in_poly2d(const v2d& v, const poly2d& poly);
 
-
-  // pair<int, int> closest_two_points2d(const vector<v2d>& pts);
 
   // dbl area2d(const poly2d& poly);
 
