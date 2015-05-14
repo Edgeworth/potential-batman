@@ -242,11 +242,11 @@ bool point_in_poly2d(const v2d& v, const poly2d& poly) {
   for (int i = 0; i < poly.size(); ++i) {
     const v2d& a = poly[i];
     const v2d& b = poly[(i + 1) % poly.size()];
-    if (a.y <= v.y && b.y > v.y &&
-        is_strictly_left_of(v, {a, b})) {
-      wn++;
-    } else if (a.y >= v.y && b.y < v.y &&
-        is_strictly_right_of(v, {a, b})) {
+    if (a.y <= v.y) {
+		if (b.y > v.y && is_strictly_left_of(v, {a, b})) {
+        wn++;
+	  }
+    } else if (b.y <= v.y && is_strictly_right_of(v, {a, b})) {
       wn--;
     }
   }
@@ -737,12 +737,20 @@ void test() {
   // bool point_in_poly2d(const v2d& v, const poly2d& poly);
   poly2d star = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
   poly2d square = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
+  poly2d triangle = {{-0.5, 0}, {0, -1}, {0.5, 0}};
+  poly2d ushape = {{0, 0}, {3, 0}, {3, 2}, {2, 2}, {2, 1}, {1, 1}, {1, 2}, {0, 2}};
+  poly2d breaking = {{8, 4}, {8, 8}, {7, 8}, {7, 6}, {6, 6}, {6, 8}, {4, 8}, {4, 4}};
   assert(point_in_poly2d({0, 0}, star));
   assert(!point_in_poly2d({1, 0}, star));
   assert(!point_in_poly2d({2, 0}, star));
   assert(point_in_poly2d({0.5, 0.5}, square));
   assert(!point_in_poly2d({1.0, 0.5}, square));
   assert(!point_in_poly2d({1.5, 0.5}, square));
+  assert(point_in_poly2d({0.1, -0.2}, triangle));
+  assert(point_in_poly2d({0.5, 1.5}, ushape));
+  assert(!point_in_poly2d({1.5, 1.5}, ushape));
+  assert(point_in_poly2d({2.5, 1.5}, ushape));
+  assert(!point_in_poly2d({2.5, 6}, breaking));
 
   // dbl area2d(const poly2d& poly);
   assert_equal(1.0, area2d({{0, 0}, {1, 0}, {1, 1}, {0, 1}}));
