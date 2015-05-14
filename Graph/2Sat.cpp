@@ -144,5 +144,38 @@ void test() {
 }
 
 int main() {
-  test();
+  freopen("mountain.in", "r", stdin); freopen("mountain.out", "w", stdout);
+
+  int T, N;
+  scanf("%d %d", &T, &N);
+
+  vpii impls;
+  for (int n = 0; n < N; ++n) {
+    int i, j;
+    char X, Y;
+    scanf("%d %c %d %c ", &i, &X, &j, &Y);
+    i--;
+    j--;
+    int ivar = 2 * i;
+    if (X == 'R') ivar++;
+    int jvar = 2 * j;
+    if (Y == 'R') jvar++;
+    impls.push_back({not_var(ivar), jvar});
+    impls.push_back({not_var(jvar), ivar});
+  }
+  
+  vb assignments(2 * T, false);
+  vb var_set(2 * T, false);
+  if (two_sat(T, impls, assignments, var_set)) {
+    for (int i = 0; i < T; ++i) {
+      if (assignments[2*i + 1]) {
+        printf("R");
+      } else {
+        printf("L");
+      }
+    }
+    printf("\n");
+  } else {
+    printf("LOST\n");
+  }
 }
