@@ -59,7 +59,7 @@ Maths Facts
 - Binomial coeffs
     - `(n, r) = n! / (r! * (n - r)!)`
     - Recurrence on r:  
-      `(0, 0) = 1`, `(0, r) = 1` for `r != 0`,  
+      `(0, 0) = 1`, `(0, r) = 0` for `r != 0`,  
       `(n, r) = (n - 1, r) + (n - 1, r - 1)` for `r > 0`
     - `(n, r) = (n, n - r)`
     - `Sum( (n, k) for k = 0, 1, .., n ) = 2^n`
