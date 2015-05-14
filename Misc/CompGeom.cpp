@@ -251,7 +251,7 @@ bool point_in_poly2d(const v2d& v, const poly2d& poly) {
     }
   }
   
-  return wn == 0;
+  return wn != 0;
 }
 
 dbl area2d(const poly2d& poly) {
@@ -735,9 +735,18 @@ void test() {
 
 
   // bool point_in_poly2d(const v2d& v, const poly2d& poly);
-
+  poly2d star = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+  poly2d square = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
+  assert(point_in_poly2d({0, 0}, star));
+  assert(!point_in_poly2d({1, 0}, star));
+  assert(!point_in_poly2d({2, 0}, star));
+  assert(point_in_poly2d({0.5, 0.5}, square));
+  assert(!point_in_poly2d({1.0, 0.5}, square));
+  assert(!point_in_poly2d({1.5, 0.5}, square));
 
   // dbl area2d(const poly2d& poly);
+  assert_equal(1.0, area2d({{0, 0}, {1, 0}, {1, 1}, {0, 1}}));
+  assert_equal(0.5, area2d({{0, 0}, {1, 0}, {1, 1}}));
 
   // v2d centroid2d(const poly2d& poly);
 
