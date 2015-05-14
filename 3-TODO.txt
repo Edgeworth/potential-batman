@@ -14,10 +14,6 @@
 - Largest sum sub-matrix
 - Balanced partition
 
-## Misc
-
-- KMP string matching
-
 ## Data Structures
 - Range Tree
 
