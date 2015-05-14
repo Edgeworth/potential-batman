@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 /* START SOLUTION */
 
@@ -773,6 +773,38 @@ void test() {
   // v3d reflect3d(const v3d& r, const v3d& n);
 }
 
+
+// http://uva.onlinejudge.org/external/6/681.html
+bool solve_convex_hull_finding() {
+  int K;
+  cin >> K;
+  cout << K << endl;
+  for (int k = 0; k < K; ++k) {
+    int N;
+    cin >> N;
+    vector<v2d> pts;
+    for (int i = 0; i < N; ++i) {
+      int x, y;
+      cin >> x >> y;
+      if (i != N-1) pts.push_back({y, x});
+    }
+
+    vector<v2d> hull = convex2d(pts);
+
+    cout << (hull.size() + 1) << endl;
+    cout << hull[0].y << " " << hull[0].x << endl;
+    for (int i = hull.size()-1; i >= 0; --i) {
+      cout << hull[i].y << " " << hull[i].x << endl;
+    }
+
+    if (k != K-1) {
+      cin >> N; // -1
+      cout << N << endl;
+    }
+  }
+}
+
 int main() {
-  test();
+  solve_convex_hull_finding();
+  //test();
 }
