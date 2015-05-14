@@ -14,16 +14,11 @@
 - Largest sum sub-matrix
 - Balanced partition
 
-## Misc
-
-- KMP string matching
-
 ## Data Structures
 - Range Tree
 
 ## Maths
 
-- 2SAT
 - Kirchhoff's theorem :(
 - Polya counting (?? hopefully not)
 - Great circle distance
