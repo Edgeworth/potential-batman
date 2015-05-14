@@ -216,9 +216,9 @@ poly2d convex2d(vector<v2d> pts) {
   c2dref = pts.back();
   pts.pop_back();
   sort(pts.begin(), pts.end(), convex2dcomp);
-  pts.push_back(c2dref);
   vector<v2d> convex = {c2dref, pts[0]};
   for (int i = 1; i < pts.size(); ++i) {
+    convex.push_back(pts[i]);
     while (convex.size() >= 3) {
       v2d& top = convex[convex.size() - 1];
       v2d& mid = convex[convex.size() - 2];
@@ -230,9 +230,7 @@ poly2d convex2d(vector<v2d> pts) {
         break;
       }
     }
-    convex.push_back(pts[i]);
   }
-  if (convex.back() == c2dref) convex.pop_back();
   return convex;
 }
 
@@ -254,16 +252,6 @@ bool point_in_poly2d(const v2d& v, const poly2d& poly) {
   }
   
   return wn == 0;
-}
-
-// RETURNS INDICIES
-pair<int, int> closest_two_points2d(const vector<v2d>& pts) {
-  return {-1, -1};
-}
-
-// BENTLEY-OTTMANN
-vector<v2d> all_inter_points2d(const vector<line2d>& lines) {
-  return {{-1, -1}};
 }
 
 dbl area2d(const poly2d& poly) {
@@ -458,6 +446,7 @@ fail:
     printf(" ");
   }
   printf("\n");
+  exit(1);
 }
 
 #define assert ASSERT
@@ -735,12 +724,14 @@ void test() {
   vector<v2d> p2 = {{0, 0}, {1, 0}, {1, 1}};
   vector<v2d> p3 = {{0, 0}, {1, 1}};
   vector<v2d> p4 = {{0, 0}, {1, 1}, {2, 2}};
-  vector<v2d> p4 = {{0, 0}, {1, 1}, {0, 2}, {2, 2}};
-  vector<v2d> p5 = {{-2. -2}, {-1, -1}, {0, 0}, {1, 1}, {2, 2}};
+  vector<v2d> p5 = {{0, 0}, {1, 1}, {0, 2}, {2, 2}};
+  vector<v2d> p6 = {{-2, 2}, {-1, 1}, {0, 0}, {1, 1}, {2, 2}};
   assert_equal((poly2d{{-2, 0}, {0, -2}, {2, 0}, {0, 2}}), convex2d(p1));
   assert_equal(p2, convex2d(p2));
   assert_equal(p3, convex2d(p3));
-  assert_equal(p4, convex2d(p4));
+  assert_equal((poly2d{{0, 0}, {2, 2}}), convex2d(p4));
+  assert_equal((poly2d{{0, 0}, {2, 2}, {0, 2}}), convex2d(p5));
+  assert_equal((poly2d{{-2, 2}, {0, 0}, {2, 2}}), convex2d(p6));
 
 
   // bool point_in_poly2d(const v2d& v, const poly2d& poly);
@@ -805,6 +796,6 @@ bool solve_convex_hull_finding() {
 }
 
 int main() {
-  solve_convex_hull_finding();
-  //test();
+  //solve_convex_hull_finding();
+  test();
 }
