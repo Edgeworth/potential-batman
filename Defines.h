@@ -1,6 +1,8 @@
 #ifndef DEFINES_INCLUDED
 #define DEFINES_INCLUDED
 
+/* START SOLUTION */
+
 #include<iostream>
 #include<iomanip>
 #include<sstream>
@@ -100,5 +102,7 @@ bool gti(dbl a, dbl b, bool include) {
 // ios::sync_with_stdio(false);
 // cin.tie(NULL);
 // and don't use endl
+
+/* END SOLUTION */
 
 #endif
