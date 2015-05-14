@@ -2,9 +2,7 @@
 
 ## Graph
 
-- Min cost perfect matching (Hungarian algorithm?)
 - Min cost max flow
-- Articulation points (ben)
 - Blossom algorithm :(
 - K shortest paths / loops
 - Knights tour divide and conquer

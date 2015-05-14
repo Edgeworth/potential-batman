@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 /* START SOLUTION */
 
@@ -145,6 +145,61 @@ int simple_test() {
   return 0;
 }
 
+static double EPS = 1E-6;
+
+// http://uva.onlinejudge.org/external/100/p10072.pdf
+void solve_cricket_team() {
+  int caze = 1;
+  while (true) {
+    int N;
+    cin >> N;
+    if (N == 0) break;
+
+    vi bt(N);
+    vi bl(N);
+    vi fl(N);
+    for (int i = 0; i < N; i++) {
+      cin >> bt[i] >> bl[i] >> fl[i];
+    }
+
+    int BT, BL, AR;
+    cin >> BT >> BL >> AR;
+    
+    vvi adj(N, vi(N, 0));
+    for (int i = 0; i < BT + BL + AR; ++i) {
+      for (int j = 0; j < N; ++j) {
+        if      (i < BT)      adj[i][j] = int(0.5 + EPS + 0.8 * (double) bt[j] +                        0.2 * (double) fl[j]);
+        else if (i < BT + BL) adj[i][j] = int(0.5 + EPS + 0.1 * (double) bt[j] + 0.7 * (double) bl[j] + 0.2 * (double) fl[j]);
+        else                  adj[i][j] = int(0.5 + EPS + 0.4 * (double) bt[j] + 0.4 * (double) bl[j] + 0.2 * (double) fl[j]);
+      }
+    }
+
+    vi match = max_matching(adj);
+
+    if (caze > 1) cout << endl;
+    cout << "Team #" << caze++ << endl;
+    int tot = 0;
+    set<int> bts, bls, ars;
+    for (int i = 0; i < BT + BL + AR; ++i) {
+      tot += adj[i][match[i]];
+      if      (i < BT)      bts.insert(match[i] + 1);
+      else if (i < BT + BL) bls.insert(match[i] + 1);
+      else                  ars.insert(match[i] + 1);
+    }
+    cout << "Maximum Effective Score = " << tot;
+    cout << endl << "Batsmen :";
+    for (int i : bts) cout << " " << i;
+    cout << endl << "Bowlers :";
+    for (int i : bls) cout << " " << i;
+    cout << endl << "All-rounders :";
+    for (int i : ars) cout << " " << i;
+    cout << endl;
+  }
+}
+
+
+
 int main() {
-  return simple_test();
+  solve_cricket_team();
+  //return simple_test();
 }

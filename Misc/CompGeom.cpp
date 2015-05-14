@@ -86,7 +86,7 @@ v2d normal_of2d(const v2d& v) {
 
 v2d reflect2d(const v2d& r, const v2d& n) {
   v2d normn = normalise2d(n);
-  return dot2d(n, r) * 2.0 - r;
+  return dot2d(normn, r) * 2.0 - r;
 }
 
 // REQUIRES NON-ZERO LENGTH LINE.
@@ -462,13 +462,52 @@ void test() {
   assert_equal({}, normal_of2d({1.32, 5.32}));
 
   // v2d reflect2d(const v2d& r, const v2d& n);
-  assert_equal({
+  assert_equal({0, 3}, reflect2d({3, 0}, {1, 1}));
+  assert_equal({3, 0}, reflect2d({0, 3}, {1, 1}));
+  assert_equal({1, 1}, reflect2d({0, 1}, {-1, 1}));
 
   // dbl prop_along_line2d(const v2d& p, const line2d& l);
+  assert_equal(0.0, prop_along_line2d({1, 1}, {{1, 1}, {3, 44}}));
+  assert_equal(1.0, prop_along_line2d({3, 44}, {{1, 1}, {3, 44}}));
+  assert_equal(0.5, prop_along_line2d({2, 22.5}, {{1, 1}, {3, 44}}));
+  assert_equal(-0.5, prop_along_line2d({0, 0}, {{1, 1}, {3, 3}}));
 
   // bool point_on_line_inf2d(const v2d& p, const line2d& l);
+  assert(point_on_line_inf2d({0, 0}, {{0, 0}, {2, 5}}));
+  assert(point_on_line_inf2d({1, 2.5}, {{0, 0}, {2, 5}}));
+  assert(point_on_line_inf2d({-1, -2.5}, {{0, 0}, {2, 5}}));
+  assert(!point_on_line_inf2d({-0, -2.5}, {{0, 0}, {2, 5}}));
+  assert(!point_on_line_inf2d({1, 2}, {{0, 0}, {2, 5}}));
 
   // bool point_on_line_segment2d(const v2d& p, const line2d& l, bool include);
+  assert(point_on_line_segment2d({0, 0}, {{0, 0}, {2, 5}}, true));
+  assert(!point_on_line_segment2d({0, 0}, {{0, 0}, {2, 5}}, false));
+  assert(point_on_line_segment2d({1, 2.5}, {{0, 0}, {2, 5}}, true));
+  assert(point_on_line_segment2d({1, 2.5}, {{0, 0}, {2, 5}}, false));
+  assert(!point_on_line_segment2d({-1, -2.5}, {{0, 0}, {2, 5}}, true));
+  assert(!point_on_line_segment2d({-1, -2.5}, {{0, 0}, {2, 5}}, false));
+  assert(!point_on_line_segment2d({-0, -2.5}, {{0, 0}, {2, 5}}, true));
+  assert(!point_on_line_segment2d({-0, -2.5}, {{0, 0}, {2, 5}}, false));
+  assert(!point_on_line_segment2d({1, 2}, {{0, 0}, {2, 5}}, true));
+  assert(!point_on_line_segment2d({1, 2}, {{0, 0}, {2, 5}}, false));
+
+  assert(!point_on_line_segment2d({0, 3}, {{0, 0}, {0, 2}}, true));
+  assert(!point_on_line_segment2d({0, 3}, {{0, 0}, {0, 2}}, false));
+
+  assert(point_on_line_segment2d({0, 2}, {{0, 0}, {0, 2}}, true));
+  assert(!point_on_line_segment2d({0, 2}, {{0, 0}, {0, 2}}, false));
+
+  assert(point_on_line_segment2d({0, 1}, {{0, 0}, {0, 2}}, true));
+  assert(point_on_line_segment2d({0, 1}, {{0, 0}, {0, 2}}, false));
+
+  assert(!point_on_line_segment2d({-1, 0}, {{0, 0}, {2, 0}}, true));
+  assert(!point_on_line_segment2d({-1, 0}, {{0, 0}, {2, 0}}, false));
+
+  assert(point_on_line_segment2d({0, 0}, {{0, 0}, {2, 0}}, true));
+  assert(!point_on_line_segment2d({0, 0}, {{0, 0}, {2, 0}}, false));
+
+  assert(point_on_line_segment2d({1, 0}, {{0, 0}, {2, 0}}, true));
+  assert(point_on_line_segment2d({1, 0}, {{0, 0}, {2, 0}}, false));
 
   // bool inter2d(const line2d& a, const line2d& b, bool include,
   //              dbl& aprop, dbl& bprop, line2d& inter_line, bool& infinite);
