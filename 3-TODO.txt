@@ -7,14 +7,6 @@
 - Chromatic Number
 
 ## Comp Geom
-
-- Library
+  Test:
   - Is point on line?
   - How close is point to line?
-  - Do two lines intersect?
-  - Where do two lines intersect?
-  - Is point in polygon?
-    - Crossing / winding number
-  - What is the area of a polygon?
-- Line segment intersections
-- Convex hull
