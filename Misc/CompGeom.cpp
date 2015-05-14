@@ -804,7 +804,60 @@ bool solve_convex_hull_finding() {
   }
 }
 
+
+// http://uva.onlinejudge.org/external/110/11030.html
+void solve_predator_ii() {
+  int T;
+  cin >> T;
+  for (int t = 0; t < T; t++) {
+    cout << "Case " << (t+1) << ":" << endl;
+
+    int N;
+    cin >> N;
+    vector<vector<v2d>> polys(N);
+    for (int n = 0; n < N; ++n) {
+      int S;
+      cin >> S;
+      for (int i = 0; i < S; ++i) {
+        int x, y;
+        cin >> x >> y;
+        polys[n].push_back({x, y});
+      }
+      int i = 0;
+      while (i < S - 2 && 
+          colinear2d(polys[n][i], polys[n][i+1], polys[n][i+2])) {
+        ++i;
+      }
+      if (is_strictly_right_of(polys[n][i+2], {polys[n][i], polys[n][i+1]})) {
+        reverse(polys[n].begin(), polys[n].end());
+        cerr << "rev" << endl;
+      }
+    }
+
+    int Q;
+    cin >> Q;
+    for (int q = 0; q < Q; ++q) {
+      v2d start, end;
+      cin >> start.x >> start.y >> end.x >> end.y;
+      int cost = 0;
+      for (int i = 0; i < N; i++) {
+        bool is = point_in_poly2d(start, polys[i]);
+        bool in = point_in_poly2d(end,   polys[i]);
+        //DBG(start.x);
+        //DBG(start.y);
+        //DBG(is);
+        //DBG(end.x);
+        //DBG(end.y);
+        //DBG(in);
+        cost += is != in;
+      }
+      cout << cost << endl;
+    }
+  }
+}
+
 int main() {
-  solve_convex_hull_finding();
+  solve_predator_ii();
+  //solve_convex_hull_finding();
   //test();
 }
