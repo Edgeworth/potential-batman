@@ -180,3 +180,68 @@ Maths Facts
 
 - Ellipsoid volume: `(4/3) pi r_1 r_2 r_3`
 
+- Great circle distance:
+
+        /*Given the latitude and longitude of two points in
+          degrees, calculates the distance over the sphere
+          between them. Latitude is given in the range
+          [99, 90] degrees, and Longitude is given in the
+          range [180, 180] degrees. */
+        double greatcircle (double lat1, double long1,
+                            double lat2, double long2) {
+            double radius = 1.0;
+            double a = pi*(lat1/180.0);
+            double b = pi*(lat2/180.0);
+            double c = pi*((long2-long1)/180.0);
+            return radius*acos(sin(a)*sin(b) + cos(a)*cos(b)*cos(c));
+        }
+
+- Equation of a circle through 3 points:
+
+    Given three points `P1 = (x1, y1)`, `P2 = (x2, y2)` and `P3 = (x3, y3)`, we make lines `a` and `b` through `P1` and `P2`, and `P2` and `P3` (resp). Choose the ordering of the points so that no vertical line is generated.
+
+    The equations of the two lines are
+    
+        ya = ma (x - x1) + y1 and yb = mb(x - x2) + y2
+    
+    where `ma` and `mb` are the slopes of the lines, given by
+    
+        ma = (y2 - y1) / (x2 - x1) and mb = (y3 - y2) / (x3 - x2)
+
+    The equations of the lines perpendicular to `a` and `b` passing through the midpoints of `P1P2` and `P2P3` are
+        
+        ya2 = -(1 / ma) (x - (x1 + x2)/2) + (y1 + y2)/2 and
+        
+        yb2 = -(1 / mb) (x - (x2 + x3)/2) + (y2 + y3)/2
+
+    These two lines intersect at the centre. Solving for `x` gives
+    
+        x = (ma mb (y1 - y3) + mb (x1 + x2) - ma (x2 + x3)) / (2 (mb - ma))
+    
+    and `y` can be found by substituting into the equation of one of the perpendicular lines above. Radius is the distance from `P1` to the centre.
+
+    NOTE: `ma - mb` is only `0` when the lines are parallel, in which case there is no circle that passes through all three points.
+    
+- Equation of a circle through 2 points, given a radius:
+
+    Given two points `P1 = (x1, y1)` and `P2 = (x2, y2)` and a radius `R`:
+    
+        double mid_x = (x1 + x2) / 2;
+		double mid_y = (y1 + y2) / 2;
+		double dx = (x1 - x2) / 2;
+		double dy = (y1 - y2) / 2;
+		
+		double dist = sqrt(dx * dx + dy * dy);
+		double p_dist = sqrt(R * R - dist * dist);
+		
+		if(dir) {
+    		m_dx =  dy * p_dist / dist;
+    		m_dy = -dx * p_pist / dist;
+		}
+		else {
+    		m_dx = -dy * p_dist / dist;
+    		m_dy =  dx * p_dist / dist;
+		}
+		
+		// coordinate of centre
+		return {mid_x + m_dx, mid_y + m_dy};
