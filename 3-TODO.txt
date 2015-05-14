@@ -6,14 +6,6 @@
 - K shortest paths / loops
 - Chromatic Number
 
-## DP
-
-- Balanced partition
-
-## Maths
-
-- Great circle distance
-
 ## Comp Geom
 
 - Library
