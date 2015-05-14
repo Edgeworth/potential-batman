@@ -3,26 +3,16 @@
 ## Graph
 
 - Min cost max flow
-- Blossom algorithm :(
 - K shortest paths / loops
-- Knights tour divide and conquer
 - Chromatic Number
 
 ## DP
 
-- Unbound and 0/1 knapsack
-- Largest sum sub-matrix
 - Balanced partition
-
-## Data Structures
-- Range Tree
 
 ## Maths
 
-- Kirchhoff's theorem :(
-- Polya counting (?? hopefully not)
 - Great circle distance
-- Systems of inequalities with Bellman-Ford
 
 ## Comp Geom
 
@@ -36,10 +26,3 @@
   - What is the area of a polygon?
 - Line segment intersections
 - Convex hull
-- Closest pair of points
-- Voronoi's algorithm (lol)
-- Boolean ops on polygons
-- Geom data structures
-  - Range/cell querying
-  - Repeated nearest neighbour
-  - Ray tracing
