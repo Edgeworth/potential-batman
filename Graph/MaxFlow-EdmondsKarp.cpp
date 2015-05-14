@@ -25,7 +25,7 @@ ll max_flow(vvl& cap, vvl& flow, int s, int t) {
 
       for(int next = 0; next < cap.size(); ++next) {
         if(cap[cur][next] - flow[cur][next] <= 0 ||
-           p[next] != -1)
+            p[next] != -1)
           continue;
 
         q.push(next);
@@ -33,17 +33,15 @@ ll max_flow(vvl& cap, vvl& flow, int s, int t) {
       }
     }
     // BFS ends here
-    
-    if(p[t] == -1) {
-      return tot_flow;
-    }
+
+    if(p[t] == -1) return tot_flow;
     else {
       // find bottleneck
       ll bottleneck = LLONG_MAX;
       int cur = t;
       while(p[cur] != cur) {
-        bottleneck = min(bottleneck, cap[p[cur]][cur] -
-                         flow[p[cur]][cur]);
+        bottleneck = min(bottleneck,
+            cap[p[cur]][cur] - flow[p[cur]][cur]);
         cur = p[cur];
       }
 
@@ -120,7 +118,7 @@ int solve_gopher() {
           cap[2+i][2+n+j] = 1;
       }
     }
-    
+
     cout << n - max_flow(cap, flow, 0, 1) << endl;
   }
 
@@ -128,5 +126,5 @@ int solve_gopher() {
 }
 
 int main() {
-  return solve_bandwidth();
+  return solve_gopher();
 }
