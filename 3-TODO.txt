@@ -23,7 +23,6 @@
 
 ## Maths
 
-- 2SAT
 - Kirchhoff's theorem :(
 - Polya counting (?? hopefully not)
 - Great circle distance
