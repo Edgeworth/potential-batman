@@ -73,9 +73,9 @@ inline int not_var(int var) {
 // impls: Use 2 * var for positive and 2 * var + 1 for not var.
 // 2i = I
 // 2i + 1 = not I
-bool two_sat(int numVars, const vpii& impls,
+bool two_sat(int num_vars, const vpii& impls,
     vb& assignment, vb& vars_set) {
-  vvi adj(2 * numVars);
+  vvi adj(2 * num_vars);
   for (const auto& impl : impls) {
     adj[impl.first].push_back(impl.second);
     adj[not_var(impl.second)].push_back(not_var(impl.first));
@@ -120,18 +120,18 @@ bool two_sat(int numVars, const vpii& impls,
 /* END SOLUTION */
 
 void test() {
-  int numVars = 3;
+  int num_vars = 3;
   vector<pair<int, int>> impls = {{0, 2}, {3, 4}, {4, 0}, {0, 3}};
-  vector<bool> assign(2 * numVars, false);
-  vector<bool> set_vars(2 * numVars, false);
+  vector<bool> assign(2 * num_vars, false);
+  vector<bool> set_vars(2 * num_vars, false);
 
   assign[0] = true;
   assign[1] = false;
   set_vars[0] = set_vars[1] = true;
 
-  if (two_sat(numVars, impls, assign, set_vars)) printf("Assignable\n");
+  if (two_sat(num_vars, impls, assign, set_vars)) printf("Assignable\n");
   else printf("Not assignable\n");
-  for (int i = 0; i < numVars; ++i) {
+  for (int i = 0; i < num_vars; ++i) {
     printf("%d: ", i);
     if (assign[2 * i]) {
       printf("true\n");
@@ -170,5 +170,38 @@ int solve_buglife() {
 }
 
 int main() {
-  return solve_buglife();
+  freopen("mountain.in", "r", stdin); freopen("mountain.out", "w", stdout);
+
+  int T, N;
+  scanf("%d %d", &T, &N);
+
+  vpii impls;
+  for (int n = 0; n < N; ++n) {
+    int i, j;
+    char X, Y;
+    scanf("%d %c %d %c ", &i, &X, &j, &Y);
+    i--;
+    j--;
+    int ivar = 2 * i;
+    if (X == 'R') ivar++;
+    int jvar = 2 * j;
+    if (Y == 'R') jvar++;
+    impls.push_back({not_var(ivar), jvar});
+    impls.push_back({not_var(jvar), ivar});
+  }
+  
+  vb assignments(2 * T, false);
+  vb var_set(2 * T, false);
+  if (two_sat(T, impls, assignments, var_set)) {
+    for (int i = 0; i < T; ++i) {
+      if (assignments[2*i + 1]) {
+        printf("R");
+      } else {
+        printf("L");
+      }
+    }
+    printf("\n");
+  } else {
+    printf("LOST\n");
+  }
 }
