@@ -126,9 +126,9 @@ Maths Facts
 
 - Partition function p: `p(n)` gives the number of ways
   of writing `n` as a sum of positive integers. We have
-  `p(n) = Sum( p(n - k) for k a pentagonal number )`, where
-  the pentagonal numbers are of the form `1/2k(3k-1)`, 
-  `p(0) = 1` and `p(l) = 0` for `l < 0`
+  `p(n) = Sum( (-1)^k p(n - g_k) for k < 0 or k > 0 )`,
+  where `g_k = k(3k-1)/2` is the kth generalised pentagonal
+  number, and `p(l) = 0` for `l < 0`.
 
 - Bell numbers: the number of partitions of a set of `n`
   elements. Recurrence: 

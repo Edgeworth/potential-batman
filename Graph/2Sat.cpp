@@ -1,4 +1,4 @@
-#include "Defines.h"
+#include "../Defines.h"
 
 struct Node {
   Node() : low(-1), index(-1) {}
@@ -73,10 +73,8 @@ inline int not_var(int var) {
 // impls: Use 2 * var for positive and 2 * var + 1 for not var.
 // 2i = I
 // 2i + 1 = not I
-bool two_sat(int numVars, 
-    const vector<pair<int, int>>& impls,
-    vector<bool>& assignment, 
-    vector<bool>& vars_set) {
+bool two_sat(int numVars, const vpii& impls,
+    vb& assignment, vb& vars_set) {
   vvi adj(2 * numVars);
   for (const auto& impl : impls) {
     adj[impl.first].push_back(impl.second);
@@ -143,6 +141,34 @@ void test() {
   }
 }
 
+int solve_buglife() {
+    int S;
+    cin >> S;
+
+    for(int s = 1; s <= S; ++s) {
+        ll B, I;
+        cin >> B >> I;
+
+        vpii imps;
+        vb val(B), ass(B);
+
+        for(int i = 0; i < I; ++i) {
+            int a, b;
+            cin >> a >> b;
+            --a; --b;
+
+            imps.push_back({2*a, 2*b+1});
+            imps.push_back({2*b, 2*a+1});
+        }
+
+        cout << "Scenario #" << s << ":\n";
+        if(!two_sat(B, imps, ass, val))
+            cout << "No suspicious bugs found!\n";
+        else cout << "Suspicious bugs found!\n"; 
+    }
+    return 0;
+}
+
 int main() {
-  test();
+  return solve_buglife();
 }
