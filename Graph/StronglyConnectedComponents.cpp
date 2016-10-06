@@ -24,12 +24,12 @@ struct Node {
 // cur_scc: like a seen array
 // sccs: output sccs.
 void scc_internal(
-    int n, 
-    const vvi& adj, 
+    int n,
+    const vvi& adj,
     int& index,
     vector<Node>& nodes,
     stack<int>& s,
-    vector<bool>& cur_scc, 
+    vector<bool>& cur_scc,
     vvi& sccs) {
   nodes[n].index = nodes[n].low = index++;
   cur_scc[n] = true;
@@ -96,7 +96,7 @@ int main() {
       name1 = trim(name1);
       people[name1] = i;
     }
-    
+
     vvi adj(P);
     for (int i = 0; i < T; ++i) {
       getline(cin, name1);
@@ -105,7 +105,7 @@ int main() {
       name2 = trim(name2);
       adj[people[name1]].push_back(people[name2]);
     }
-    
+
     vvi sccs = scc(adj);
     //for (const auto& scc : sccs) {
       //cerr << "Scc: ";

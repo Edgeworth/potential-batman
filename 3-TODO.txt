@@ -2,7 +2,6 @@
 
 ## Graph
 
-- Min cost max flow
 - K shortest paths / loops
 - Chromatic Number
 
