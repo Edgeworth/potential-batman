@@ -46,7 +46,7 @@ vi sais(const vi& s) {
     if (s[i] >= maxChar)
       maxChar = s[i] + 1;
 
-    if (!t[i] && t[i + 1]) 
+    if (!t[i] && t[i + 1])
       lms.push_back(i + 1);
   }
 
@@ -108,6 +108,22 @@ vi sais(const vi& s) {
       bucketStart, bucketEnd, s, t, lmsSAIndices);
 }
 
+// From Max:
+void computeLCP() {
+  int i, L;
+  Phi[SA[0]] = -1;                                         // default value
+  for (i = 1; i < n; i++)                            // compute Phi in O(n)
+    Phi[SA[i]] = SA[i-1];    // remember which suffix is behind this suffix
+  for (i = L = 0; i < n; i++) {             // compute Permuted LCP in O(n)
+    if (Phi[i] == -1) { PLCP[i] = 0; continue; }            // special case
+    while (T[i + L] == T[Phi[i] + L]) L++;       // L increased max n times
+    PLCP[i] = L;
+    L = max(L-1, 0);                             // L decreased max n times
+  }
+  for (i = 0; i < n; i++)                            // compute LCP in O(n)
+    LCP[i] = PLCP[SA[i]];   // put the permuted LCP to the correct position
+}
+
 /* END SOLUTION */
 
 void test() {
@@ -122,7 +138,7 @@ void test() {
     output.push_back(test.substr(i, test.size() - i));
     printf("%s\n", output.back().c_str());
   }
-  
+
   vector<string> copy = output;
   sort(copy.begin(), copy.end());
   if (output != copy) {
