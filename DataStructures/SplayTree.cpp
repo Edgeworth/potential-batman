@@ -38,6 +38,7 @@ public:
             rnext = l;
           }
         } else if (ns[l].k < key) {
+          ns[rnext].l = root;
           rnext = root;
           if (ns[l].r == DUMMY) {
             root = l;
