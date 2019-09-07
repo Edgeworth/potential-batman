@@ -19,6 +19,6 @@ std::vector<int> zalg(const std::string& p, const std::string& s) {
       }
     }
   }
-  return v;
+  return z;
 }
 /* END SOLUTION */
